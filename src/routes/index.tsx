@@ -1,268 +1,219 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import {
-  Sparkles, Wand2, Code2, Users, LayoutTemplate, Zap, ArrowRight, Play,
-  Check, Smartphone, BarChart3, MessageSquare,
+  ArrowUp, Paperclip, Globe, Sparkles, Heart, Eye, GitFork,
+  ShoppingBag, BarChart3, Briefcase, GraduationCap, Smartphone, Users,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { FloatingCard } from "@/components/FloatingCard";
-import { features, steps, testimonials, plans } from "@/lib/mock-data";
-
-const iconMap = { Sparkles, Wand2, Code2, Users, LayoutTemplate, Zap };
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Prompt to App — Turn Prompts Into Full Apps Instantly" },
-      { name: "description", content: "AI-powered app generation. Describe your idea and get a complete app concept, pages, features and branding in seconds." },
-      { property: "og:title", content: "Prompt to App — Turn Prompts Into Full Apps Instantly" },
-      { property: "og:description", content: "Describe your idea, get a complete app concept in seconds." },
+      { title: "Crystal — Build something beautiful" },
+      { name: "description", content: "Create apps and websites by chatting with AI. From idea to deployed product in minutes." },
+      { property: "og:title", content: "Crystal — Build something beautiful" },
+      { property: "og:description", content: "Create apps and websites by chatting with AI." },
     ],
   }),
   component: Landing,
 });
 
+const templates = [
+  { label: "SaaS landing", icon: Briefcase },
+  { label: "E-commerce", icon: ShoppingBag },
+  { label: "Dashboard", icon: BarChart3 },
+  { label: "Portfolio", icon: Smartphone },
+  { label: "Education", icon: GraduationCap },
+  { label: "Social app", icon: Users },
+];
+
+const community = [
+  { title: "Lumen Finance", author: "maya", remixes: 1248, views: "18.2k", grad: "from-rose-300 via-orange-200 to-amber-200" },
+  { title: "Orbit Notes", author: "diego", remixes: 932, views: "12.4k", grad: "from-violet-300 via-fuchsia-200 to-rose-200" },
+  { title: "Pulse Health", author: "priya", remixes: 814, views: "9.7k", grad: "from-emerald-200 via-teal-200 to-cyan-200" },
+  { title: "Forge LMS", author: "sam", remixes: 712, views: "8.1k", grad: "from-amber-200 via-rose-200 to-pink-300" },
+  { title: "Echo Social", author: "kai", remixes: 689, views: "7.8k", grad: "from-sky-200 via-indigo-200 to-violet-300" },
+  { title: "Atlas Store", author: "rin", remixes: 542, views: "6.2k", grad: "from-pink-300 via-rose-200 to-orange-200" },
+];
+
 function Landing() {
+  const [prompt, setPrompt] = useState("");
+  const navigate = useNavigate();
+
+  const submit = () => {
+    if (!prompt.trim()) return;
+    navigate({ to: "/workspace" });
+  };
+
   return (
     <main className="relative">
       {/* HERO */}
-      <section className="relative mx-auto max-w-7xl px-4 pt-20 pb-32 lg:pt-28">
-        <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr]">
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-muted-foreground backdrop-blur"
-            >
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--glow-cyan)]" />
-              Now in public beta — v2.0 shipped
-            </motion.div>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}
-              className="mt-6 font-display text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl"
-            >
-              Turn Prompts Into <span className="gradient-text">Full Apps</span> Instantly
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-              className="mt-6 max-w-xl text-lg text-muted-foreground"
-            >
-              Describe what you want to build. Get a complete app concept — pages, features, branding and UI structure — designed and ready to ship.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}
-              className="mt-8 flex flex-wrap gap-3"
-            >
-              <Button asChild size="lg" className="h-12 bg-gradient-to-r from-[var(--glow-purple)] to-[var(--glow-blue)] px-6 text-white hover:opacity-90 shadow-[0_8px_30px_-6px_var(--glow-purple)]">
-                <Link to="/builder">Start Building <ArrowRight className="ml-2 h-4 w-4" /></Link>
-              </Button>
-              <Button size="lg" variant="outline" className="h-12 border-white/15 bg-white/5 px-6 backdrop-blur hover:bg-white/10">
-                <Play className="mr-2 h-4 w-4" /> Watch Demo
-              </Button>
-            </motion.div>
-            <div className="mt-10 flex items-center gap-6 text-xs text-muted-foreground">
-              <div>⭐ 4.9/5 from 2,400+ teams</div>
-              <div className="hidden md:block">No credit card required</div>
+      <section className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 grid-bg" />
+        <div className="mx-auto max-w-3xl px-4 pt-24 pb-20 text-center sm:pt-32">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur"
+          >
+            <Sparkles className="h-3 w-3 text-rose-500" />
+            Introducing Crystal 2.0 — now with live multiplayer
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.05 }}
+            className="mt-6 font-display text-5xl font-normal leading-[1.05] tracking-tight md:text-7xl"
+          >
+            Build something <em className="italic gradient-text">beautiful</em>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}
+            className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg"
+          >
+            Create apps and websites by chatting with AI. From idea to deployed product in minutes.
+          </motion.p>
+
+          {/* Prompt composer */}
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.6, delay: 0.15 }}
+            className="mx-auto mt-10 w-full max-w-2xl"
+          >
+            <div className="surface group relative rounded-2xl p-3 transition-shadow focus-within:shadow-[0_20px_50px_-20px_oklch(0.7_0.2_0/0.3)]">
+              <div className="absolute -inset-px -z-10 rounded-2xl bg-[var(--gradient-brand)] opacity-0 blur-xl transition-opacity group-focus-within:opacity-30" />
+              <textarea
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); } }}
+                placeholder="Ask Crystal to build a landing page for a coffee shop…"
+                className="min-h-20 w-full resize-none bg-transparent px-3 py-2 text-base outline-none placeholder:text-muted-foreground"
+              />
+              <div className="flex items-center justify-between gap-2 px-1 pt-1">
+                <div className="flex items-center gap-1">
+                  <button className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent">
+                    <Paperclip className="h-4 w-4" />
+                  </button>
+                  <button className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent">
+                    <Globe className="h-3.5 w-3.5" /> Public
+                  </button>
+                </div>
+                <button
+                  onClick={submit}
+                  className="flex h-8 w-8 items-center justify-center rounded-md bg-foreground text-background transition-opacity hover:opacity-90 disabled:opacity-40"
+                  disabled={!prompt.trim()}
+                >
+                  <ArrowUp className="h-4 w-4" />
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* Floating preview cards */}
-          <div className="relative h-[520px]">
-            <FloatingCard delay={0} rotate={-6} className="absolute left-0 top-8 w-56">
-              <div className="flex items-center gap-2 border-b border-white/5 pb-2">
-                <div className="h-2 w-2 rounded-full bg-[var(--glow-purple)]" />
-                <span className="text-xs text-muted-foreground">AI Prompt</span>
-              </div>
-              <p className="mt-2 font-mono text-[11px] leading-relaxed text-foreground/80">
-                "Build a finance app with budgeting, AI insights and Stripe…"
-              </p>
-              <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white/5">
-                <div className="h-full w-3/4 bg-gradient-to-r from-[var(--glow-purple)] to-[var(--glow-blue)] animate-shimmer" />
-              </div>
-            </FloatingCard>
+            {/* template chips */}
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+              {templates.map((t) => {
+                const Icon = t.icon;
+                return (
+                  <button
+                    key={t.label}
+                    onClick={() => setPrompt(`Build a ${t.label.toLowerCase()} for…`)}
+                    className="surface group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground transition-all hover:-translate-y-0.5 hover:text-foreground"
+                  >
+                    <Icon className="h-3.5 w-3.5" /> {t.label}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
 
-            <FloatingCard delay={0.4} rotate={4} className="absolute right-0 top-0 w-64">
-              <div className="flex items-center gap-2 border-b border-white/5 pb-2">
-                <BarChart3 className="h-3 w-3 text-[var(--glow-blue)]" />
-                <span className="text-xs">Analytics</span>
-              </div>
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                <div className="rounded-lg bg-white/5 p-2">
-                  <div className="text-[10px] text-muted-foreground">Users</div>
-                  <div className="font-display text-lg font-semibold">12.4k</div>
-                </div>
-                <div className="rounded-lg bg-white/5 p-2">
-                  <div className="text-[10px] text-muted-foreground">Revenue</div>
-                  <div className="font-display text-lg font-semibold gradient-text">$48k</div>
-                </div>
-              </div>
-              <div className="mt-3 flex h-12 items-end gap-1">
-                {[40, 65, 30, 80, 55, 90, 70].map((h, i) => (
-                  <div key={i} className="flex-1 rounded-sm bg-gradient-to-t from-[var(--glow-purple)] to-[var(--glow-blue)]" style={{ height: `${h}%` }} />
-                ))}
-              </div>
-            </FloatingCard>
-
-            <FloatingCard delay={0.8} rotate={-3} className="absolute left-12 bottom-8 w-52">
-              <div className="flex items-center gap-2 border-b border-white/5 pb-2">
-                <Smartphone className="h-3 w-3 text-[var(--glow-cyan)]" />
-                <span className="text-xs">Mobile App</span>
-              </div>
-              <div className="mt-3 space-y-1.5">
-                {["Home", "Wallet", "Insights", "Settings"].map((t) => (
-                  <div key={t} className="flex items-center justify-between rounded-md bg-white/5 px-2 py-1.5">
-                    <span className="text-[11px]">{t}</span>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground" />
-                  </div>
-                ))}
-              </div>
-            </FloatingCard>
-
-            <FloatingCard delay={0.6} rotate={5} className="absolute right-8 bottom-20 w-48">
-              <div className="flex items-center gap-2 border-b border-white/5 pb-2">
-                <MessageSquare className="h-3 w-3 text-[var(--glow-purple)]" />
-                <span className="text-xs">Dashboard</span>
-              </div>
-              <div className="mt-3 space-y-2">
-                <div className="h-2 w-full rounded-full bg-white/10" />
-                <div className="h-2 w-2/3 rounded-full bg-white/10" />
-                <div className="grid grid-cols-3 gap-1.5 pt-1">
-                  <div className="h-8 rounded-md bg-gradient-to-br from-[var(--glow-purple)]/40 to-transparent" />
-                  <div className="h-8 rounded-md bg-gradient-to-br from-[var(--glow-blue)]/40 to-transparent" />
-                  <div className="h-8 rounded-md bg-gradient-to-br from-[var(--glow-cyan)]/40 to-transparent" />
-                </div>
-              </div>
-            </FloatingCard>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+            className="mt-12 text-xs text-muted-foreground"
+          >
+            Trusted by 240,000+ builders · No credit card required
+          </motion.div>
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section className="mx-auto max-w-7xl px-4 py-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="text-xs uppercase tracking-widest text-[var(--glow-cyan)]">Features</div>
-          <h2 className="mt-3 font-display text-4xl font-bold md:text-5xl">Everything you need to ship</h2>
-          <p className="mt-4 text-muted-foreground">A complete toolkit from prompt to production.</p>
+      {/* FROM THE COMMUNITY */}
+      <section className="mx-auto max-w-6xl px-4 py-20">
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <div className="text-xs uppercase tracking-widest text-muted-foreground">From the community</div>
+            <h2 className="mt-2 font-display text-3xl md:text-4xl">Popular this week</h2>
+          </div>
+          <Link to="/community" className="text-sm text-muted-foreground hover:text-foreground">View all →</Link>
         </div>
-        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((f, i) => {
-            const Icon = iconMap[f.icon as keyof typeof iconMap];
-            return (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.07 }}
-                whileHover={{ y: -6, rotateX: 4, rotateY: -4 }}
-                style={{ transformStyle: "preserve-3d" }}
-                className="glass gradient-border group relative overflow-hidden rounded-2xl p-6"
-              >
-                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[var(--glow-purple)]/20 blur-3xl opacity-0 transition-opacity group-hover:opacity-100" />
-                <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--glow-purple)]/30 to-[var(--glow-blue)]/30 ring-1 ring-white/10">
-                  <Icon className="h-5 w-5 text-[var(--glow-cyan)]" />
+
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {community.map((p, i) => (
+            <motion.button
+              key={p.title}
+              initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.05 }}
+              whileHover={{ y: -4 }}
+              className="group surface overflow-hidden rounded-2xl text-left"
+            >
+              <div className={`relative aspect-[16/10] bg-gradient-to-br ${p.grad}`}>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.5),transparent_60%)]" />
+                <div className="absolute inset-x-0 bottom-0 flex h-12 items-center gap-1 bg-white/40 px-3 backdrop-blur-sm">
+                  <div className="h-1.5 w-1.5 rounded-full bg-red-400" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-yellow-400" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-green-400" />
+                  <div className="ml-2 truncate text-[10px] text-foreground/70">{p.title.toLowerCase().replace(/\s+/g, "")}.crystal.app</div>
                 </div>
-                <h3 className="mt-5 font-display text-lg font-semibold">{f.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{f.desc}</p>
-              </motion.div>
-            );
-          })}
+              </div>
+              <div className="flex items-center justify-between p-4">
+                <div>
+                  <div className="font-medium">{p.title}</div>
+                  <div className="text-xs text-muted-foreground">by @{p.author}</div>
+                </div>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1"><Eye className="h-3 w-3" /> {p.views}</span>
+                  <span className="flex items-center gap-1"><GitFork className="h-3 w-3" /> {p.remixes}</span>
+                </div>
+              </div>
+            </motion.button>
+          ))}
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section className="mx-auto max-w-7xl px-4 py-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="text-xs uppercase tracking-widest text-[var(--glow-cyan)]">How it works</div>
-          <h2 className="mt-3 font-display text-4xl font-bold md:text-5xl">Three steps to launch</h2>
-        </div>
-        <div className="relative mt-16 grid gap-8 md:grid-cols-3">
-          <div className="absolute inset-x-12 top-12 hidden h-px bg-gradient-to-r from-transparent via-[var(--glow-purple)]/40 to-transparent md:block" />
-          {steps.map((s, i) => (
+      {/* HOW IT WORKS — minimal */}
+      <section className="mx-auto max-w-5xl px-4 py-20">
+        <div className="grid gap-12 md:grid-cols-3">
+          {[
+            { n: "01", t: "Describe", d: "Type what you want to build in plain English." },
+            { n: "02", t: "Generate", d: "Crystal writes the code, designs the UI, and wires it up." },
+            { n: "03", t: "Ship", d: "Preview live, iterate by chatting, deploy in one click." },
+          ].map((s, i) => (
             <motion.div
               key={s.n}
-              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.15 }}
-              className="glass relative rounded-2xl p-8 text-center"
-            >
-              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[var(--glow-purple)] to-[var(--glow-blue)] shadow-[0_0_40px_-5px_var(--glow-purple)]">
-                <span className="font-display text-3xl font-bold text-white">{s.n}</span>
-              </div>
-              <h3 className="mt-6 font-display text-xl font-semibold">{s.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      <section className="mx-auto max-w-7xl px-4 py-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="text-xs uppercase tracking-widest text-[var(--glow-cyan)]">Loved by builders</div>
-          <h2 className="mt-3 font-display text-4xl font-bold md:text-5xl">From idea to launch, faster</h2>
-        </div>
-        <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="glass gradient-border rounded-2xl p-6"
             >
-              <p className="text-sm leading-relaxed text-foreground/90">"{t.quote}"</p>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--glow-purple)] to-[var(--glow-blue)] text-sm font-semibold text-white">
-                  {t.initials}
-                </div>
-                <div>
-                  <div className="text-sm font-semibold">{t.name}</div>
-                  <div className="text-xs text-muted-foreground">{t.role}</div>
-                </div>
-              </div>
+              <div className="text-xs font-mono text-muted-foreground">{s.n}</div>
+              <h3 className="mt-2 font-display text-2xl">{s.t}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* PRICING PREVIEW */}
-      <section className="mx-auto max-w-7xl px-4 py-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="text-xs uppercase tracking-widest text-[var(--glow-cyan)]">Pricing</div>
-          <h2 className="mt-3 font-display text-4xl font-bold md:text-5xl">Simple, transparent pricing</h2>
-        </div>
-        <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {plans.map((p, i) => (
-            <motion.div
-              key={p.name}
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`glass relative rounded-2xl p-6 ${p.featured ? "scale-[1.04] gradient-border glow-purple" : "gradient-border"}`}
-            >
-              {p.featured && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-[var(--glow-purple)] to-[var(--glow-blue)] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
-                  Most Popular
-                </div>
-              )}
-              <div className="text-sm text-muted-foreground">{p.tagline}</div>
-              <div className="mt-1 font-display text-2xl font-semibold">{p.name}</div>
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className="font-display text-4xl font-bold">${p.price}</span>
-                <span className="text-sm text-muted-foreground">/mo</span>
-              </div>
-              <ul className="mt-6 space-y-2.5">
-                {p.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--glow-cyan)]" /> {f}
-                  </li>
-                ))}
-              </ul>
-              <Button asChild className={`mt-6 w-full ${p.featured ? "bg-gradient-to-r from-[var(--glow-purple)] to-[var(--glow-blue)] text-white" : "bg-white/5 hover:bg-white/10"}`}>
-                <Link to="/pricing">Get started</Link>
-              </Button>
-            </motion.div>
-          ))}
-        </div>
+      {/* CTA */}
+      <section className="mx-auto max-w-3xl px-4 pb-24 text-center">
+        <h2 className="font-display text-4xl md:text-5xl">Start building <em className="italic gradient-text">today</em></h2>
+        <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">Join 240,000+ creators turning ideas into shipped products with Crystal.</p>
+        <Link to="/workspace" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-foreground px-5 py-2.5 text-sm text-background hover:opacity-90">
+          <Heart className="h-4 w-4 fill-current" /> Start for free
+        </Link>
       </section>
 
-      <footer className="mx-auto max-w-7xl border-t border-white/5 px-4 py-10 text-center text-sm text-muted-foreground">
-        © 2026 Prompt to App — Built with imagination.
+      <footer className="border-t border-border/60">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-xs text-muted-foreground">
+          <div>© 2026 Crystal Labs</div>
+          <div className="flex gap-6">
+            <Link to="/pricing">Pricing</Link>
+            <Link to="/community">Community</Link>
+            <a href="#">Docs</a>
+            <a href="#">Privacy</a>
+          </div>
+        </div>
       </footer>
     </main>
   );
