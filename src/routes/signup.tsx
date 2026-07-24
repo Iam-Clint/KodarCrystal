@@ -33,7 +33,7 @@ function SignupPage() {
     e.preventDefault();
     if (!name || !email || !password) return;
     setLoading(true);
-    setTimeout(() => navigate({ to: "/dashboard" }), 900);
+    setTimeout(() => navigate({ to: "/onboarding" }), 900);
   };
 
   return (

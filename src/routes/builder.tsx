@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import { Sparkles, Wand2, Save, ChevronRight, Loader2, ArrowRight } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Sparkles, Wand2, Save, ChevronRight, Loader2, ArrowRight, CornerDownLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { categories, promptSuggestions, generatedPages, generatedPalette, generatedFeatures } from "@/lib/mock-data";
 
@@ -27,10 +27,72 @@ function Builder() {
   const [prompt, setPrompt] = useState("");
   const [activeCat, setActiveCat] = useState("SaaS");
   const [generating, setGenerating] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Prefill from onboarding selection.
+  useEffect(() => {
+    try {
+      const raw = typeof window !== "undefined" ? window.localStorage.getItem("crystal:onboarding") : null;
+      if (raw) {
+        const parsed = JSON.parse(raw) as { seed?: string };
+        if (parsed.seed) setPrompt(parsed.seed);
+        window.localStorage.removeItem("crystal:onboarding");
+      }
+    } catch { /* ignore */ }
+  }, []);
 
   const generate = () => {
     setGenerating(true);
     setTimeout(() => setGenerating(false), 1600);
+  };
+
+  const filtered = useMemo(() => {
+    const q = prompt.trim().toLowerCase();
+    if (!q) return promptSuggestions.slice(0, 6);
+    return promptSuggestions.filter((s) => s.toLowerCase().includes(q)).slice(0, 6);
+  }, [prompt]);
+
+  useEffect(() => {
+    if (activeIdx >= filtered.length) setActiveIdx(0);
+  }, [filtered.length, activeIdx]);
+
+  const insertSuggestion = (s: string) => {
+    setPrompt(s);
+    setShowSuggestions(false);
+    setActiveIdx(0);
+    requestAnimationFrame(() => textareaRef.current?.focus());
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (showSuggestions && filtered.length > 0) {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setActiveIdx((i) => (i + 1) % filtered.length);
+        return;
+      }
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setActiveIdx((i) => (i - 1 + filtered.length) % filtered.length);
+        return;
+      }
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        insertSuggestion(filtered[activeIdx]);
+        return;
+      }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setShowSuggestions(false);
+        return;
+      }
+      if (e.key === "Tab") {
+        e.preventDefault();
+        insertSuggestion(filtered[activeIdx]);
+        return;
+      }
+    }
   };
 
   return (
@@ -42,27 +104,80 @@ function Builder() {
 
       <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
         <div className="space-y-5">
-          <div className="surface rounded-2xl p-5">
-            <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
-              <Sparkles className="h-3.5 w-3.5 text-rose-500" /> AI prompt
-            </div>
-            <textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe the app you want to build…"
-              className="h-32 w-full resize-none bg-transparent text-base outline-none placeholder:text-muted-foreground"
-            />
-            <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3">
-              <Button onClick={generate} disabled={generating} className="btn-brand">
-                {generating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating</> : <><Sparkles className="mr-2 h-4 w-4" /> Generate</>}
-              </Button>
-              <Button variant="outline">
-                <Wand2 className="mr-2 h-4 w-4" /> Improve
-              </Button>
-              <Button variant="outline">
-                <Save className="mr-2 h-4 w-4" /> Save draft
-              </Button>
-              <div className="ml-auto text-xs text-muted-foreground">{prompt.length} / 1000</div>
+          <div className="relative">
+            {/* Inline suggestions dropdown — anchored above the prompt box */}
+            <AnimatePresence>
+              {showSuggestions && filtered.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.15 }}
+                  className="surface absolute bottom-full left-0 right-0 z-20 mb-2 overflow-hidden rounded-xl p-1 shadow-lg"
+                  role="listbox"
+                  aria-label="Prompt suggestions"
+                >
+                  <div className="flex items-center justify-between px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+                    <span className="flex items-center gap-1.5"><Sparkles className="h-3 w-3 text-rose-500" /> Suggestions</span>
+                    <span className="hidden sm:flex items-center gap-1">
+                      <kbd className="rounded border border-border bg-secondary px-1 py-0.5 text-[9px]">↑</kbd>
+                      <kbd className="rounded border border-border bg-secondary px-1 py-0.5 text-[9px]">↓</kbd>
+                      to navigate ·
+                      <kbd className="rounded border border-border bg-secondary px-1 py-0.5 text-[9px]">↵</kbd>
+                      to insert
+                    </span>
+                  </div>
+                  <ul>
+                    {filtered.map((s, i) => (
+                      <li key={s}>
+                        <button
+                          type="button"
+                          role="option"
+                          aria-selected={i === activeIdx}
+                          onMouseEnter={() => setActiveIdx(i)}
+                          onMouseDown={(e) => { e.preventDefault(); insertSuggestion(s); }}
+                          className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                            i === activeIdx ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary/60"
+                          }`}
+                        >
+                          <span className="truncate">{s}</span>
+                          {i === activeIdx && <CornerDownLeft className="h-3.5 w-3.5 shrink-0 text-rose-500" />}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="surface rounded-2xl p-5">
+              <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
+                <Sparkles className="h-3.5 w-3.5 text-rose-500" /> AI prompt
+              </div>
+              <textarea
+                ref={textareaRef}
+                value={prompt}
+                onChange={(e) => { setPrompt(e.target.value); setShowSuggestions(true); setActiveIdx(0); }}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 120)}
+                onKeyDown={onKeyDown}
+                placeholder="Describe the app you want to build…"
+                aria-autocomplete="list"
+                aria-expanded={showSuggestions && filtered.length > 0}
+                className="h-32 w-full resize-none bg-transparent text-base outline-none placeholder:text-muted-foreground"
+              />
+              <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3">
+                <Button onClick={generate} disabled={generating} className="btn-brand">
+                  {generating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating</> : <><Sparkles className="mr-2 h-4 w-4" /> Generate</>}
+                </Button>
+                <Button variant="outline">
+                  <Wand2 className="mr-2 h-4 w-4" /> Improve
+                </Button>
+                <Button variant="outline">
+                  <Save className="mr-2 h-4 w-4" /> Save draft
+                </Button>
+                <div className="ml-auto text-xs text-muted-foreground">{prompt.length} / 1000</div>
+              </div>
             </div>
           </div>
 
@@ -81,6 +196,7 @@ function Builder() {
               ))}
             </div>
           </div>
+
 
           <div>
             <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Category</div>

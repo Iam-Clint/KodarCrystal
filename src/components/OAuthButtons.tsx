@@ -35,7 +35,7 @@ export function OAuthButtons({ className = "" }: { className?: string }) {
 
   const go = (provider: string) => {
     setLoading(provider);
-    setTimeout(() => navigate({ to: "/dashboard" }), 900);
+    setTimeout(() => navigate({ to: "/onboarding" }), 900);
   };
 
   const providers = [
