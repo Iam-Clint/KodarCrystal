@@ -114,13 +114,65 @@ function Landing() {
             initial={{ opacity: 0, y: 20, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.6, delay: 0.15 }}
             className="mx-auto mt-10 w-full max-w-2xl"
           >
+            {/* Interactive suggestions — sit right above the prompt box */}
+            <div className="mb-3 min-h-[92px]">
+              <AnimatePresence mode="wait">
+                {showTrending ? (
+                  <motion.div
+                    key="trending"
+                    initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25 }}
+                    className="flex flex-col gap-2"
+                  >
+                    <div className="flex items-center justify-center gap-1.5 text-[11px] uppercase tracking-widest text-muted-foreground">
+                      <Sparkles className="h-3 w-3 text-rose-500" /> Try one of these
+                    </div>
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {trendingSuggestions.map((s) => (
+                        <button
+                          key={s.title}
+                          onClick={() => setPrompt(s.title)}
+                          className="surface group flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                          <span className="truncate">{s.title}</span>
+                          <span className="ml-2 shrink-0 rounded-full bg-secondary px-1.5 py-0.5 text-[10px] text-foreground/70">{s.tag}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                ) : contextual.length > 0 ? (
+                  <motion.div
+                    key="contextual"
+                    initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25 }}
+                    className="flex flex-col gap-2"
+                  >
+                    <div className="flex items-center justify-center gap-1.5 text-[11px] uppercase tracking-widest text-muted-foreground">
+                      <Wand2 className="h-3 w-3 text-rose-500" /> Enhance your prompt
+                    </div>
+                    <div className="flex flex-wrap items-center justify-center gap-2">
+                      {contextual.map((s) => (
+                        <button
+                          key={s.title}
+                          onClick={() => setPrompt((p) => p.trimEnd() + s.add)}
+                          className="surface flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                          <span className="text-rose-500">+</span> {s.title}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </div>
+
             <div className="surface group relative rounded-2xl p-3 transition-shadow focus-within:shadow-[0_20px_50px_-20px_oklch(0.7_0.2_0/0.3)]">
               <div className="absolute -inset-px -z-10 rounded-2xl bg-[var(--gradient-brand)] opacity-0 blur-xl transition-opacity group-focus-within:opacity-30" />
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); } }}
-                placeholder="Ask Crystal to build a landing page for a coffee shop…"
+                placeholder={`Ask Crystal to build ${rotatingPlaceholders[placeholderIdx]}`}
                 className="min-h-20 w-full resize-none bg-transparent px-3 py-2 text-base outline-none placeholder:text-muted-foreground"
               />
               <div className="flex items-center justify-between gap-2 px-1 pt-1">
@@ -141,6 +193,7 @@ function Landing() {
                 </button>
               </div>
             </div>
+
 
             {/* template chips */}
             <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
