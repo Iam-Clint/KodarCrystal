@@ -13,6 +13,7 @@ import { Route as WorkspaceRouteImport } from './routes/workspace'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as BuilderRouteImport } from './routes/builder'
@@ -36,6 +37,11 @@ const ResultsRoute = ResultsRouteImport.update({
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/builder': typeof BuilderRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/results': typeof ResultsRoute
   '/settings': typeof SettingsRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/builder': typeof BuilderRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/results': typeof ResultsRoute
   '/settings': typeof SettingsRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/builder': typeof BuilderRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/results': typeof ResultsRoute
   '/settings': typeof SettingsRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/builder'
     | '/community'
     | '/dashboard'
+    | '/login'
     | '/pricing'
     | '/results'
     | '/settings'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/builder'
     | '/community'
     | '/dashboard'
+    | '/login'
     | '/pricing'
     | '/results'
     | '/settings'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/builder'
     | '/community'
     | '/dashboard'
+    | '/login'
     | '/pricing'
     | '/results'
     | '/settings'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   BuilderRoute: typeof BuilderRoute
   CommunityRoute: typeof CommunityRoute
   DashboardRoute: typeof DashboardRoute
+  LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
   ResultsRoute: typeof ResultsRoute
   SettingsRoute: typeof SettingsRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/pricing'
       fullPath: '/pricing'
       preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   BuilderRoute: BuilderRoute,
   CommunityRoute: CommunityRoute,
   DashboardRoute: DashboardRoute,
+  LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
   ResultsRoute: ResultsRoute,
   SettingsRoute: SettingsRoute,
