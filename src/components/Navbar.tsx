@@ -44,7 +44,6 @@ export function Navbar() {
             {[
               { to: "/community", label: "Community" },
               { to: "/pricing", label: "Pricing" },
-              { to: "/dashboard", label: "Dashboard" },
             ].map((l) => (
               <Link
                 key={l.to}
@@ -67,11 +66,11 @@ export function Navbar() {
           >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
-          <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground hidden sm:inline">
+          <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground hidden sm:inline">
             Log in
           </Link>
           <Button asChild size="sm" className="btn-brand h-8 rounded-md px-3 text-sm">
-            <Link to="/workspace">Get started</Link>
+            <Link to="/signup">Get started</Link>
           </Button>
         </div>
       </div>
