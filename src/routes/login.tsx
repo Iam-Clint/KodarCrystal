@@ -77,7 +77,7 @@ function LoginPage() {
             <label className="flex items-center gap-1.5 text-muted-foreground">
               <input type="checkbox" className="h-3 w-3 rounded" /> Remember me
             </label>
-            <a href="#" className="text-muted-foreground hover:text-foreground">Forgot password?</a>
+            <Link to="/forgot-password" className="text-muted-foreground hover:text-foreground">Forgot password?</Link>
           </div>
           <Button type="submit" disabled={loading} className="btn-brand h-10 w-full">
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Log in <ArrowRight className="ml-1 h-4 w-4" /></>}
