@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkspaceRouteImport } from './routes/workspace'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as PricingRouteImport } from './routes/pricing'
@@ -22,6 +23,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const WorkspaceRoute = WorkspaceRouteImport.update({
   id: '/workspace',
   path: '/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/results': typeof ResultsRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/results': typeof ResultsRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/results': typeof ResultsRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/results'
     | '/settings'
+    | '/signup'
     | '/workspace'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/results'
     | '/settings'
+    | '/signup'
     | '/workspace'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/results'
     | '/settings'
+    | '/signup'
     | '/workspace'
   fileRoutesById: FileRoutesById
 }
@@ -144,6 +156,7 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   ResultsRoute: typeof ResultsRoute
   SettingsRoute: typeof SettingsRoute
+  SignupRoute: typeof SignupRoute
   WorkspaceRoute: typeof WorkspaceRoute
 }
 
@@ -154,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/workspace'
       fullPath: '/workspace'
       preLoaderRoute: typeof WorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -224,8 +244,18 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   ResultsRoute: ResultsRoute,
   SettingsRoute: SettingsRoute,
+  SignupRoute: SignupRoute,
   WorkspaceRoute: WorkspaceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
