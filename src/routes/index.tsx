@@ -1,8 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
 import {
-  ArrowUp, Paperclip, Globe, Sparkles, Heart, Eye, GitFork,
+  ArrowUp, Paperclip, Globe, Sparkles, Heart, Eye, GitFork, Wand2,
   ShoppingBag, BarChart3, Briefcase, GraduationCap, Smartphone, Users,
 } from "lucide-react";
 
@@ -27,6 +27,33 @@ const templates = [
   { label: "Social app", icon: Users },
 ];
 
+const rotatingPlaceholders = [
+  "a landing page for a coffee shop with online ordering…",
+  "a habit tracker with social streaks and friend leaderboards…",
+  "an AI resume builder with real-time preview…",
+  "a minimalist project management tool for indie makers…",
+  "a marketplace for handmade ceramics with Stripe checkout…",
+];
+
+const trendingSuggestions = [
+  { title: "AI SaaS starter with pricing page", tag: "Popular" },
+  { title: "Notion-style docs app with dark mode", tag: "Trending" },
+  { title: "Fitness coach with workout tracker", tag: "New" },
+  { title: "Crypto portfolio dashboard", tag: "Popular" },
+];
+
+function getContextualSuggestions(prompt: string) {
+  const p = prompt.toLowerCase();
+  const suggestions: { title: string; add: string }[] = [];
+  if (!p) return [];
+  if (!p.includes("dark")) suggestions.push({ title: "Add dark mode toggle", add: " with a dark mode toggle" });
+  if (!p.includes("auth") && !p.includes("login")) suggestions.push({ title: "Add user authentication", add: " with email + Google login" });
+  if (!p.includes("payment") && !p.includes("stripe")) suggestions.push({ title: "Add Stripe payments", add: " and Stripe checkout" });
+  if (!p.includes("mobile") && !p.includes("responsive")) suggestions.push({ title: "Make it mobile responsive", add: ", fully mobile responsive" });
+  if (!p.includes("dashboard")) suggestions.push({ title: "Include an admin dashboard", add: " with an admin dashboard" });
+  return suggestions.slice(0, 3);
+}
+
 const community = [
   { title: "Lumen Finance", author: "maya", remixes: 1248, views: "18.2k", grad: "from-rose-300 via-orange-200 to-amber-200" },
   { title: "Orbit Notes", author: "diego", remixes: 932, views: "12.4k", grad: "from-violet-300 via-fuchsia-200 to-rose-200" },
@@ -38,12 +65,22 @@ const community = [
 
 function Landing() {
   const [prompt, setPrompt] = useState("");
+  const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const t = setInterval(() => setPlaceholderIdx((i) => (i + 1) % rotatingPlaceholders.length), 3200);
+    return () => clearInterval(t);
+  }, []);
+
+  const contextual = useMemo(() => getContextualSuggestions(prompt), [prompt]);
+  const showTrending = prompt.trim().length === 0;
 
   const submit = () => {
     if (!prompt.trim()) return;
-    navigate({ to: "/workspace" });
+    navigate({ to: "/signup" });
   };
+
 
   return (
     <main className="relative">
