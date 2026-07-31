@@ -155,6 +155,94 @@ function Settings() {
             </div>
           )}
 
+          {active === "connectors" && (
+            <div className="space-y-5">
+              <div className="surface rounded-xl p-5">
+                <div className="flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    <h3 className="font-display text-lg">Connectors</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Link services to your workspace — deploys, data, design and team tools.
+                    </p>
+                  </div>
+                  <div className="flex gap-1 rounded-lg border border-border bg-secondary p-0.5">
+                    {(["all", "connected", "available"] as const).map((f) => (
+                      <button
+                        key={f}
+                        onClick={() => setConnectorFilter(f)}
+                        className={`relative rounded-md px-3 py-1.5 text-xs capitalize transition-colors ${
+                          connectorFilter === f ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {connectorFilter === f && (
+                          <motion.div layoutId="conn-filter" className="absolute inset-0 rounded-md bg-background shadow-sm" />
+                        )}
+                        <span className="relative">{f}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {connectorGroups.map((g) => {
+                const items = g.items.filter((i) =>
+                  connectorFilter === "all" ? true : connectorFilter === "connected" ? connected[i.id] : !connected[i.id],
+                );
+                if (!items.length) return null;
+                return (
+                  <div key={g.group}>
+                    <div className="mb-2 text-xs uppercase tracking-widest text-muted-foreground">{g.group}</div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {items.map((c) => {
+                        const on = connected[c.id];
+                        return (
+                          <motion.div key={c.id} whileHover={{ y: -3 }} className="surface flex flex-col rounded-xl p-4">
+                            <div className="flex items-start gap-3">
+                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary font-mono text-xs font-medium">
+                                {c.mark}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium">{c.name}</span>
+                                  {on && (
+                                    <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-[10px] text-muted-foreground">
+                                      <Check className="h-3 w-3 text-rose-500" /> Connected
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="mt-0.5 text-xs text-muted-foreground">{c.desc}</p>
+                                {on && c.meta && (
+                                  <div className="mt-1.5 truncate font-mono text-[10px] text-muted-foreground">{c.meta}</div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="mt-4 flex gap-2">
+                              <Button
+                                size="sm"
+                                variant={on ? "outline" : "default"}
+                                className={on ? "" : "btn-brand"}
+                                onClick={() => setConnected((s) => ({ ...s, [c.id]: !s[c.id] }))}
+                              >
+                                {on ? "Disconnect" : "Connect"}
+                              </Button>
+                              {on && (
+                                <Button size="sm" variant="ghost" className="text-muted-foreground">
+                                  Configure
+                                </Button>
+                              )}
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+
+
           {active === "billing" && (
             <div className="space-y-4">
               <div className="surface rounded-xl p-5 ring-2 ring-rose-200">
