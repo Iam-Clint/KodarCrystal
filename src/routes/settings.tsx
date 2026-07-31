@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { User, CreditCard, Bell, Key, Building2, Palette, Copy, Eye, EyeOff } from "lucide-react";
+import { User, CreditCard, Bell, Key, Building2, Palette, Copy, Eye, EyeOff, Plug, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
       { title: "Settings — Crystal" },
-      { name: "description", content: "Manage your profile, billing, notifications, API keys and workspace." },
+      { name: "description", content: "Manage your profile, billing, notifications, API keys, connectors and workspace." },
     ],
   }),
   component: Settings,
@@ -18,14 +18,48 @@ const tabs = [
   { id: "profile", label: "Profile", icon: User },
   { id: "appearance", label: "Appearance", icon: Palette },
   { id: "notifications", label: "Notifications", icon: Bell },
+  { id: "connectors", label: "Connectors", icon: Plug },
   { id: "billing", label: "Billing", icon: CreditCard },
   { id: "api", label: "API Keys", icon: Key },
   { id: "workspace", label: "Workspace", icon: Building2 },
 ] as const;
 
+const connectorGroups = [
+  {
+    group: "Deploy & hosting",
+    items: [
+      { id: "github", name: "GitHub", desc: "Two-way sync your codebase to a repo.", mark: "GH", connected: true, meta: "alexr/lumen-finance" },
+      { id: "vercel", name: "Vercel", desc: "Ship previews and production deploys.", mark: "▲", connected: false },
+      { id: "netlify", name: "Netlify", desc: "Deploy static builds with edge functions.", mark: "N", connected: false },
+      { id: "cloudflare", name: "Cloudflare", desc: "Workers, Pages and DNS management.", mark: "CF", connected: false },
+    ],
+  },
+  {
+    group: "Backend & data",
+    items: [
+      { id: "supabase", name: "Supabase", desc: "Postgres, auth and storage for your app.", mark: "SB", connected: true, meta: "crystal-prod" },
+      { id: "stripe", name: "Stripe", desc: "Payments, subscriptions and checkout.", mark: "S", connected: false },
+      { id: "resend", name: "Resend", desc: "Transactional email from your app.", mark: "R", connected: false },
+    ],
+  },
+  {
+    group: "Design & team",
+    items: [
+      { id: "figma", name: "Figma", desc: "Import frames and design tokens.", mark: "F", connected: false },
+      { id: "slack", name: "Slack", desc: "Build notifications in your channels.", mark: "SL", connected: true, meta: "#crystal-builds" },
+      { id: "linear", name: "Linear", desc: "Turn issues into build tasks.", mark: "L", connected: false },
+    ],
+  },
+];
+
 function Settings() {
   const [active, setActive] = useState<typeof tabs[number]["id"]>("profile");
   const [showKey, setShowKey] = useState(false);
+  const [connected, setConnected] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(connectorGroups.flatMap((g) => g.items.map((i) => [i.id, !!i.connected]))),
+  );
+  const [connectorFilter, setConnectorFilter] = useState<"all" | "connected" | "available">("all");
+
 
   return (
     <div className="mx-auto mt-8 max-w-5xl px-4 pb-16">
