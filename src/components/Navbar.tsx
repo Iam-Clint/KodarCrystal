@@ -43,6 +43,7 @@ export function Navbar() {
           <nav className="hidden items-center gap-1 md:flex">
             {[
               { to: "/community", label: "Community" },
+              { to: "/backend", label: "Backend" },
               { to: "/pricing", label: "Pricing" },
             ].map((l) => (
               <Link
