@@ -134,6 +134,8 @@ function Dashboard() {
           </div>
 
           <div className="space-y-5">
+            <MCPConnections compact />
+
             <div>
               <h2 className="mb-3 font-display text-xl">Activity</h2>
               <div className="surface rounded-xl p-4">
