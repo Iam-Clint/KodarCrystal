@@ -76,9 +76,6 @@ export function MCPDetailsDrawer({
               </div>
 
               <div>
-                <h3 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                  <Activity className="h-4 w-4 text-rose-500" /> Recent events
-                </h3>
                 <MCPActivity serverId={server.id} />
               </div>
             </div>
