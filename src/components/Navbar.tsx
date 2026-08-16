@@ -44,6 +44,7 @@ export function Navbar() {
             {[
               { to: "/community", label: "Community" },
               { to: "/backend", label: "Backend" },
+              { to: "/mcp", label: "MCP" },
               { to: "/pricing", label: "Pricing" },
             ].map((l) => (
               <Link
