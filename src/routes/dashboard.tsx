@@ -35,16 +35,20 @@ function Dashboard() {
       <aside className="surface sticky top-20 hidden h-[calc(100vh-6rem)] w-52 shrink-0 rounded-xl p-3 lg:block">
         <div className="mb-3 px-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Workspace</div>
         <nav className="space-y-0.5">
-          {sidebar.map((item, i) => (
-            <button
-              key={item}
-              className={`flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors ${
-                i === 0 ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-              }`}
-            >
-              {item}
-            </button>
-          ))}
+          {sidebar.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.label}
+                className={`flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors ${
+                  i === 0 ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {item.label}
+              </button>
+            );
+          })}
         </nav>
         <div className="mt-5 rounded-lg border border-border bg-secondary p-3">
           <div className="text-xs font-medium">Upgrade to Pro</div>
