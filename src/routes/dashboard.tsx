@@ -20,7 +20,14 @@ export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
 });
 
-const sidebar = ["Overview", "Projects", "Templates", "Team", "Billing"];
+const sidebar = [
+  { label: "Overview", icon: LayoutGrid },
+  { label: "Projects", icon: Folder },
+  { label: "Templates", icon: Layers },
+  { label: "Team", icon: Users },
+  { label: "MCP connections", icon: Plug },
+  { label: "Billing", icon: CreditCard },
+] as const;
 
 function Dashboard() {
   return (
