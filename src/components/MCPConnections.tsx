@@ -38,6 +38,8 @@ export function MCPConnections({ compact = false }: { compact?: boolean }) {
   const [state, setState] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(mcpServers.map((s) => [s.id, !!s.connected])),
   );
+  const [selected, setSelected] = useState<MCPServer | null>(null);
+
 
   const list = mcpServers
     .filter((s) => (cat === "All" ? true : s.category === cat))
