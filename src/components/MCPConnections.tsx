@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Plug, Search, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MCPDetailsDrawer } from "@/components/MCPDetailsDrawer";
 
 export type MCPServer = {
   id: string;
