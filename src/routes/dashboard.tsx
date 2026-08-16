@@ -2,8 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
   Sparkles, FolderKanban, Activity, Zap, Search, Bell, Plus, ArrowUpRight, TrendingUp,
+  LayoutGrid, FolderKanban as Folder, Layers, Users, CreditCard, Plug,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MCPConnections } from "@/components/MCPConnections";
 import { stats, recentProjects, activity } from "@/lib/mock-data";
 
 const iconMap = { Sparkles, FolderKanban, Activity, Zap };
