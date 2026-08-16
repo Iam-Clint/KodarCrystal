@@ -90,7 +90,20 @@ export function MCPConnections({ compact = false }: { compact?: boolean }) {
         {list.map((s) => {
           const on = state[s.id];
           return (
-            <motion.div key={s.id} whileHover={{ y: -3 }} className="surface flex flex-col rounded-xl p-4">
+            <motion.div
+              key={s.id}
+              whileHover={{ y: -3 }}
+              role="button"
+              tabIndex={0}
+              onClick={() => setSelected(s)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setSelected(s);
+                }
+              }}
+              className="surface flex cursor-pointer flex-col rounded-xl p-4 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/50"
+            >
               <div className="flex items-start gap-3">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary font-mono text-xs font-medium">{s.mark}</div>
                 <div className="min-w-0 flex-1">
@@ -114,16 +127,36 @@ export function MCPConnections({ compact = false }: { compact?: boolean }) {
                   size="sm"
                   variant={on ? "outline" : "default"}
                   className={on ? "" : "btn-brand"}
-                  onClick={() => setState((v) => ({ ...v, [s.id]: !v[s.id] }))}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setState((v) => ({ ...v, [s.id]: !v[s.id] }));
+                  }}
                 >
                   {on ? "Disconnect" : "Connect"}
                 </Button>
-                {on && <Button size="sm" variant="ghost" className="text-muted-foreground">Permissions</Button>}
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-muted-foreground"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelected(s);
+                  }}
+                >
+                  Details
+                </Button>
               </div>
             </motion.div>
           );
         })}
       </div>
+
+      <MCPDetailsDrawer
+        server={selected}
+        connected={selected ? !!state[selected.id] : false}
+        onOpenChange={(open) => !open && setSelected(null)}
+        onToggle={(id) => setState((v) => ({ ...v, [id]: !v[id] }))}
+      />
     </div>
   );
 }
