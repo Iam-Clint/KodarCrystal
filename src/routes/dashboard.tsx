@@ -2,8 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
   Sparkles, FolderKanban, Activity, Zap, Search, Bell, Plus, ArrowUpRight, TrendingUp,
+  LayoutGrid, FolderKanban as Folder, Layers, Users, CreditCard, Plug,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MCPConnections } from "@/components/MCPConnections";
 import { stats, recentProjects, activity } from "@/lib/mock-data";
 
 const iconMap = { Sparkles, FolderKanban, Activity, Zap };
@@ -18,7 +20,14 @@ export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
 });
 
-const sidebar = ["Overview", "Projects", "Templates", "Team", "Billing"];
+const sidebar = [
+  { label: "Overview", icon: LayoutGrid },
+  { label: "Projects", icon: Folder },
+  { label: "Templates", icon: Layers },
+  { label: "Team", icon: Users },
+  { label: "MCP connections", icon: Plug },
+  { label: "Billing", icon: CreditCard },
+] as const;
 
 function Dashboard() {
   return (
@@ -26,16 +35,20 @@ function Dashboard() {
       <aside className="surface sticky top-20 hidden h-[calc(100vh-6rem)] w-52 shrink-0 rounded-xl p-3 lg:block">
         <div className="mb-3 px-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Workspace</div>
         <nav className="space-y-0.5">
-          {sidebar.map((item, i) => (
-            <button
-              key={item}
-              className={`flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors ${
-                i === 0 ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-              }`}
-            >
-              {item}
-            </button>
-          ))}
+          {sidebar.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.label}
+                className={`flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors ${
+                  i === 0 ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {item.label}
+              </button>
+            );
+          })}
         </nav>
         <div className="mt-5 rounded-lg border border-border bg-secondary p-3">
           <div className="text-xs font-medium">Upgrade to Pro</div>
@@ -121,6 +134,8 @@ function Dashboard() {
           </div>
 
           <div className="space-y-5">
+            <MCPConnections compact />
+
             <div>
               <h2 className="mb-3 font-display text-xl">Activity</h2>
               <div className="surface rounded-xl p-4">
