@@ -9,7 +9,7 @@ import { OAuthButtons } from "@/components/OAuthButtons";
 export const Route = createFileRoute("/signup")({
   head: () => ({
     meta: [
-      { title: "Sign up — Crystal" },
+      { title: "Sign up — Crystal.dev" },
       { name: "description", content: "Create your Crystal account and start turning prompts into full apps." },
     ],
   }),
@@ -33,7 +33,7 @@ function SignupPage() {
     e.preventDefault();
     if (!name || !email || !password) return;
     setLoading(true);
-    setTimeout(() => navigate({ to: "/onboarding" }), 900);
+    setTimeout(() => navigate({ to: "/workspace" }), 900);
   };
 
   return (

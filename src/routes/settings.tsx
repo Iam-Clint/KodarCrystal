@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — Crystal" },
+      { title: "Settings — Crystal.dev" },
       { name: "description", content: "Manage your profile, billing, notifications, API keys, connectors and workspace." },
     ],
   }),

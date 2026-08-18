@@ -9,9 +9,9 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Crystal — Build something beautiful" },
+      { title: "Crystal.dev — Build something beautiful" },
       { name: "description", content: "Create apps and websites by chatting with AI. From idea to deployed product in minutes." },
-      { property: "og:title", content: "Crystal — Build something beautiful" },
+      { property: "og:title", content: "Crystal.dev — Build something beautiful" },
       { property: "og:description", content: "Create apps and websites by chatting with AI." },
     ],
   }),

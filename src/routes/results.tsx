@@ -10,7 +10,7 @@ const iconMap = { Code2, Smartphone, Figma, FileCode };
 export const Route = createFileRoute("/results")({
   head: () => ({
     meta: [
-      { title: "Generated app — Crystal" },
+      { title: "Generated app — Crystal.dev" },
       { name: "description", content: "Your AI-generated app concept, mockups, branding and exports — ready to ship." },
     ],
   }),

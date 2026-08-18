@@ -8,7 +8,7 @@ import { categories, promptSuggestions, generatedPages, generatedPalette, genera
 export const Route = createFileRoute("/builder")({
   head: () => ({
     meta: [
-      { title: "Builder — Crystal" },
+      { title: "Builder — Crystal.dev" },
       { name: "description", content: "Describe your idea and watch Crystal design the app, pages, branding and features." },
     ],
   }),
