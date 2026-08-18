@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import { Moon, Sun, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/components/ThemeProvider";
 
 export function CrystalLogo({ className = "h-7 w-7" }: { className?: string }) {
   return (
@@ -27,10 +27,7 @@ export function CrystalLogo({ className = "h-7 w-7" }: { className?: string }) {
 }
 
 export function Navbar() {
-  const [dark, setDark] = useState(false);
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-  }, [dark]);
+  const { resolved, toggle } = useTheme();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/70 backdrop-blur-xl">
@@ -38,12 +35,12 @@ export function Navbar() {
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2">
             <CrystalLogo className="h-6 w-6" />
-            <span className="font-display text-xl font-medium tracking-tight">Crystal</span>
+            <span className="font-display text-xl font-medium tracking-tight">Crystal.dev</span>
+            <span className="hidden text-[11px] text-muted-foreground lg:inline">Prompt to App Builder</span>
           </Link>
           <nav className="hidden items-center gap-1 md:flex">
             {[
               { to: "/community", label: "Community" },
-              { to: "/backend", label: "Backend" },
               { to: "/mcp", label: "MCP" },
               { to: "/pricing", label: "Pricing" },
             ].map((l) => (
@@ -62,11 +59,11 @@ export function Navbar() {
             <Github className="h-4 w-4" />
           </a>
           <button
-            onClick={() => setDark((v) => !v)}
+            onClick={toggle}
             className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
             aria-label="Toggle theme"
           >
-            {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {resolved === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
           <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground hidden sm:inline">
             Log in
