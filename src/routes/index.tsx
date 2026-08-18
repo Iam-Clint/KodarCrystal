@@ -9,9 +9,9 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Crystal.dev — Build something beautiful" },
+      { title: "Crystal.dev — Prompt to App Builder" },
       { name: "description", content: "Create apps and websites by chatting with AI. From idea to deployed product in minutes." },
-      { property: "og:title", content: "Crystal.dev — Build something beautiful" },
+      { property: "og:title", content: "Crystal.dev — Prompt to App Builder" },
       { property: "og:description", content: "Create apps and websites by chatting with AI." },
     ],
   }),
@@ -78,6 +78,7 @@ function Landing() {
 
   const submit = () => {
     if (!prompt.trim()) return;
+    try { window.localStorage.setItem("crystal:prompt", prompt.trim()); } catch { /* ignore */ }
     navigate({ to: "/signup" });
   };
 
@@ -93,7 +94,7 @@ function Landing() {
             className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur"
           >
             <Sparkles className="h-3 w-3 text-rose-500" />
-            Introducing Crystal 2.0 — now with live multiplayer
+            Used by builders across Nigeria
           </motion.div>
 
           <motion.h1
@@ -106,7 +107,7 @@ function Landing() {
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}
             className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg"
           >
-            Create apps and websites by chatting with AI. From idea to deployed product in minutes.
+            Crystal.dev is a prompt to app builder — describe your idea, watch it become a real product.
           </motion.p>
 
           {/* Prompt composer */}
@@ -172,7 +173,7 @@ function Landing() {
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); } }}
-                placeholder={`Ask Crystal to build ${rotatingPlaceholders[placeholderIdx]}`}
+                placeholder={`Ask Crystal.dev to build ${rotatingPlaceholders[placeholderIdx]}`}
                 className="min-h-20 w-full resize-none bg-transparent px-3 py-2 text-base outline-none placeholder:text-muted-foreground"
               />
               <div className="flex items-center justify-between gap-2 px-1 pt-1">
@@ -216,7 +217,7 @@ function Landing() {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
             className="mt-12 text-xs text-muted-foreground"
           >
-            Trusted by 240,000+ builders · No credit card required
+            Popular with developers in Lagos, Abuja and beyond · No credit card required
           </motion.div>
         </div>
       </section>
@@ -269,7 +270,7 @@ function Landing() {
         <div className="grid gap-12 md:grid-cols-3">
           {[
             { n: "01", t: "Describe", d: "Type what you want to build in plain English." },
-            { n: "02", t: "Generate", d: "Crystal writes the code, designs the UI, and wires it up." },
+            { n: "02", t: "Generate", d: "Crystal.dev writes the code, designs the UI, and wires it up." },
             { n: "03", t: "Ship", d: "Preview live, iterate by chatting, deploy in one click." },
           ].map((s, i) => (
             <motion.div
@@ -288,7 +289,7 @@ function Landing() {
       {/* CTA */}
       <section className="mx-auto max-w-3xl px-4 pb-24 text-center">
         <h2 className="font-display text-4xl md:text-5xl">Start building <em className="italic gradient-text">today</em></h2>
-        <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">Join 240,000+ creators turning ideas into shipped products with Crystal.</p>
+        <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">Join creators across Nigeria turning ideas into shipped products with Crystal.dev.</p>
         <Link to="/workspace" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-foreground px-5 py-2.5 text-sm text-background hover:opacity-90">
           <Heart className="h-4 w-4 fill-current" /> Start for free
         </Link>
@@ -296,7 +297,7 @@ function Landing() {
 
       <footer className="border-t border-border/60">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-xs text-muted-foreground">
-          <div>© 2026 Crystal Labs</div>
+          <div>© 2026 Crystal.dev</div>
           <div className="flex gap-6">
             <Link to="/pricing">Pricing</Link>
             <Link to="/community">Community</Link>
