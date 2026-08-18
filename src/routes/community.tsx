@@ -6,7 +6,7 @@ import { useState } from "react";
 export const Route = createFileRoute("/community")({
   head: () => ({
     meta: [
-      { title: "Community — Crystal" },
+      { title: "Community — Crystal.dev" },
       { name: "description", content: "Browse, remix and learn from apps built by the Crystal community." },
     ],
   }),

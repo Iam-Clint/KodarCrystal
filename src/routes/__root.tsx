@@ -1,6 +1,7 @@
 import { Outlet, createRootRoute, HeadContent, Scripts, Link } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
 import { Navbar } from "@/components/Navbar";
+import { ThemeProvider, themeInitScript } from "@/components/ThemeProvider";
 
 function NotFoundComponent() {
   return (
@@ -22,8 +23,8 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Prompt to App — Turn Prompts Into Full Apps Instantly" },
-      { name: "description", content: "Generate complete app concepts, pages, features and branding from a single prompt." },
+      { title: "Crystal.dev — Prompt to App Builder" },
+      { name: "description", content: "Crystal.dev turns a single prompt into a complete app — pages, features and branding." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -42,6 +43,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
         {children}
@@ -53,9 +55,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <>
+    <ThemeProvider>
       <Navbar />
       <Outlet />
-    </>
+    </ThemeProvider>
   );
 }

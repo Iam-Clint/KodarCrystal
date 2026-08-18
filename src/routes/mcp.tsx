@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/mcp")({
   head: () => ({
     meta: [
-      { title: "MCP Connections — Crystal" },
+      { title: "MCP Connections — Crystal.dev" },
       { name: "description", content: "Connect Crystal to the apps you already use — GitHub, Vercel, Supabase, Notion and more." },
-      { property: "og:title", content: "MCP Connections — Crystal" },
+      { property: "og:title", content: "MCP Connections — Crystal.dev" },
       { property: "og:description", content: "Connect Crystal to the apps you already use — GitHub, Vercel, Supabase, Notion and more." },
     ],
   }),

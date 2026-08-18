@@ -8,7 +8,7 @@ import { CrystalLogo } from "@/components/Navbar";
 export const Route = createFileRoute("/forgot-password")({
   head: () => ({
     meta: [
-      { title: "Reset your password — Crystal" },
+      { title: "Reset your password — Crystal.dev" },
       { name: "description", content: "Request a password reset link for your Crystal account." },
     ],
   }),

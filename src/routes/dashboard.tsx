@@ -13,7 +13,7 @@ const iconMap = { Sparkles, FolderKanban, Activity, Zap };
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — Crystal" },
+      { title: "Dashboard — Crystal.dev" },
       { name: "description", content: "Your projects, AI usage and team activity at a glance." },
     ],
   }),
