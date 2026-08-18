@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Code2, Smartphone, Figma, FileCode, Download, Share2 } from "lucide-react";
+import { Code2, Smartphone, Figma, FileCode, Download, Share2, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { generatedPages, generatedPalette, generatedFeatures, exportTargets } from "@/lib/mock-data";
 
@@ -21,6 +21,16 @@ const tabs = ["Overview", "Features", "UI Screens", "Pages", "Branding", "Export
 
 function Results() {
   const [tab, setTab] = useState<typeof tabs[number]>("Overview");
+  const [exportState, setExportState] = useState<Record<string, "loading" | "done">>({});
+
+  const runExport = (name: string) => {
+    if (exportState[name]) return;
+    setExportState((s) => ({ ...s, [name]: "loading" }));
+    setTimeout(() => {
+      setExportState((s) => ({ ...s, [name]: "done" }));
+      setTimeout(() => setExportState((s) => { const n = { ...s }; delete n[name]; return n; }), 2500);
+    }, 1500);
+  };
 
   return (
     <div className="mx-auto mt-8 max-w-6xl px-4 pb-16">
@@ -187,12 +197,26 @@ function Results() {
           {exportTargets.map((e) => {
             const Icon = iconMap[e.icon as keyof typeof iconMap];
             return (
-              <motion.button key={e.name} whileHover={{ y: -3 }} className="surface group rounded-xl p-4 text-left">
+              <motion.button
+                key={e.name}
+                whileHover={{ y: -3 }}
+                onClick={() => runExport(e.name)}
+                disabled={!!exportState[e.name]}
+                className="surface group rounded-xl p-4 text-left disabled:opacity-80"
+              >
                 <div className="flex h-9 w-9 items-center justify-center rounded-md bg-secondary transition-transform group-hover:scale-110">
-                  <Icon className="h-4 w-4 text-rose-500" />
+                  {exportState[e.name] === "loading" ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-rose-500" />
+                  ) : exportState[e.name] === "done" ? (
+                    <Check className="h-4 w-4 text-emerald-500" />
+                  ) : (
+                    <Icon className="h-4 w-4 text-rose-500" />
+                  )}
                 </div>
                 <div className="mt-3 font-medium">{e.name}</div>
-                <div className="mt-0.5 text-xs text-muted-foreground">{e.desc}</div>
+                <div className="mt-0.5 text-xs text-muted-foreground">
+                  {exportState[e.name] === "loading" ? "Exporting…" : exportState[e.name] === "done" ? "Exported" : e.desc}
+                </div>
               </motion.button>
             );
           })}
