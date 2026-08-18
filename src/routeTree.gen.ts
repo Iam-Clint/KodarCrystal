@@ -10,14 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BackendRouteImport } from './routes/backend'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as McpRouteImport } from './routes/mcp'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -27,11 +25,6 @@ import { Route as WorkspaceRouteImport } from './routes/workspace'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BackendRoute = BackendRouteImport.update({
-  id: '/backend',
-  path: '/backend',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BuilderRoute = BuilderRouteImport.update({
@@ -64,11 +57,6 @@ const McpRoute = McpRouteImport.update({
   path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -97,14 +85,12 @@ const WorkspaceRoute = WorkspaceRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/backend': typeof BackendRoute
   '/builder': typeof BuilderRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
-  '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/results': typeof ResultsRoute
   '/settings': typeof SettingsRoute
@@ -113,14 +99,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/backend': typeof BackendRoute
   '/builder': typeof BuilderRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
-  '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/results': typeof ResultsRoute
   '/settings': typeof SettingsRoute
@@ -130,14 +114,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/backend': typeof BackendRoute
   '/builder': typeof BuilderRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
-  '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/results': typeof ResultsRoute
   '/settings': typeof SettingsRoute
@@ -148,14 +130,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/backend'
     | '/builder'
     | '/community'
     | '/dashboard'
     | '/forgot-password'
     | '/login'
     | '/mcp'
-    | '/onboarding'
     | '/pricing'
     | '/results'
     | '/settings'
@@ -164,14 +144,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/backend'
     | '/builder'
     | '/community'
     | '/dashboard'
     | '/forgot-password'
     | '/login'
     | '/mcp'
-    | '/onboarding'
     | '/pricing'
     | '/results'
     | '/settings'
@@ -180,14 +158,12 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/backend'
     | '/builder'
     | '/community'
     | '/dashboard'
     | '/forgot-password'
     | '/login'
     | '/mcp'
-    | '/onboarding'
     | '/pricing'
     | '/results'
     | '/settings'
@@ -197,14 +173,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BackendRoute: typeof BackendRoute
   BuilderRoute: typeof BuilderRoute
   CommunityRoute: typeof CommunityRoute
   DashboardRoute: typeof DashboardRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
-  OnboardingRoute: typeof OnboardingRoute
   PricingRoute: typeof PricingRoute
   ResultsRoute: typeof ResultsRoute
   SettingsRoute: typeof SettingsRoute
@@ -219,13 +193,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/backend': {
-      id: '/backend'
-      path: '/backend'
-      fullPath: '/backend'
-      preLoaderRoute: typeof BackendRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/builder': {
@@ -270,13 +237,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -317,14 +277,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BackendRoute: BackendRoute,
   BuilderRoute: BuilderRoute,
   CommunityRoute: CommunityRoute,
   DashboardRoute: DashboardRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   McpRoute: McpRoute,
-  OnboardingRoute: OnboardingRoute,
   PricingRoute: PricingRoute,
   ResultsRoute: ResultsRoute,
   SettingsRoute: SettingsRoute,
