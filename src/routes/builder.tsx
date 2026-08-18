@@ -31,17 +31,14 @@ function Builder() {
   const [activeIdx, setActiveIdx] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Prefill from onboarding selection.
+  // Prefill from a prompt typed on the landing page.
   useEffect(() => {
     try {
-      const raw = typeof window !== "undefined" ? window.localStorage.getItem("crystal:onboarding") : null;
-      if (raw) {
-        const parsed = JSON.parse(raw) as { seed?: string };
-        if (parsed.seed) setPrompt(parsed.seed);
-        window.localStorage.removeItem("crystal:onboarding");
-      }
+      const seed = typeof window !== "undefined" ? window.localStorage.getItem("crystal:prompt") : null;
+      if (seed) setPrompt(seed);
     } catch { /* ignore */ }
   }, []);
+
 
   const generate = () => {
     setGenerating(true);
