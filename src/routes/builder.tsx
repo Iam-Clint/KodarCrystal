@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Sparkles, Wand2, Save, ChevronRight, Loader2, ArrowRight, CornerDownLeft } from "lucide-react";
+import { Sparkles, Wand2, Save, ChevronRight, Loader2, ArrowRight, CornerDownLeft, Hammer, NotebookPen, Gauge, Feather } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { categories, promptSuggestions, generatedPages, generatedPalette, generatedFeatures } from "@/lib/mock-data";
 
@@ -23,13 +23,28 @@ const templates = [
   { name: "Fitness App", color: "from-emerald-300 to-teal-300" },
 ];
 
+export const effortLevels = [
+  { id: "low", label: "Low", desc: "Fast, minimal reasoning — small tweaks", cost: "~1x" },
+  { id: "medium", label: "Medium", desc: "Balanced — most tasks", cost: "~2x" },
+  { id: "high", label: "High", desc: "Deeper reasoning — complex features", cost: "~4x" },
+  { id: "max", label: "Max", desc: "Maximum reasoning — hardest problems, uses the most credits", cost: "~8x" },
+] as const;
+
 function Builder() {
   const [prompt, setPrompt] = useState("");
   const [activeCat, setActiveCat] = useState("SaaS");
   const [generating, setGenerating] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
+  const [mode, setMode] = useState<"build" | "plan">("build");
+  const [effort, setEffort] = useState<(typeof effortLevels)[number]["id"]>("medium");
+  const [hoverEffort, setHoverEffort] = useState<string | null>(null);
+  const [planning, setPlanning] = useState(false);
+  const [plan, setPlan] = useState<string[] | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const shownEffort = effortLevels.find((e) => e.id === (hoverEffort ?? effort))!;
+  const effortIdx = effortLevels.findIndex((e) => e.id === effort);
 
   // Prefill from a prompt typed on the landing page.
   useEffect(() => {
@@ -41,9 +56,27 @@ function Builder() {
 
 
   const generate = () => {
+    if (mode === "plan") {
+      setPlanning(true);
+      setPlan(null);
+      setTimeout(() => {
+        setPlanning(false);
+        const idea = prompt.trim() || "your idea";
+        setPlan([
+          `Scope: a focused first version of ${idea}.`,
+          "Pages: Landing, Auth (login / signup), Dashboard, Detail view, Settings.",
+          "Data model: users, projects, items, activity_log — with per-user ownership.",
+          "Key flows: sign up → create first project → invite a teammate → publish.",
+          "Open questions: who pays (individual or team?), do you need offline support, which regions/currencies?",
+          "Suggested next step: switch to Build mode with Medium effort and generate the Dashboard first.",
+        ]);
+      }, 1200);
+      return;
+    }
     setGenerating(true);
     setTimeout(() => setGenerating(false), 1600);
   };
+
 
   const filtered = useMemo(() => {
     const q = prompt.trim().toLowerCase();
@@ -148,9 +181,71 @@ function Builder() {
             </AnimatePresence>
 
             <div className="surface rounded-2xl p-5">
-              <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
-                <Sparkles className="h-3.5 w-3.5 text-rose-500" /> AI prompt
+              <div className="mb-3 flex flex-wrap items-center gap-3">
+                <div className="flex gap-1 rounded-lg border border-border bg-secondary p-0.5">
+                  {([
+                    { id: "build", label: "Build", Icon: Hammer },
+                    { id: "plan", label: "Plan", Icon: NotebookPen },
+                  ] as const).map((m) => (
+                    <button
+                      key={m.id}
+                      onClick={() => setMode(m.id)}
+                      className={`relative flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs transition-colors ${
+                        mode === m.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {mode === m.id && <motion.div layoutId="builder-mode" className="absolute inset-0 rounded-md bg-background shadow-sm" />}
+                      <span className="relative flex items-center gap-1.5"><m.Icon className="h-3.5 w-3.5" /> {m.label}</span>
+                    </button>
+                  ))}
+                </div>
+                {mode === "plan" ? (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-medium text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                    <Feather className="h-3 w-3" /> Lightweight · No credits used
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-[10px] text-muted-foreground">
+                    <Sparkles className="h-3 w-3 text-rose-500" /> Generates code · uses credits
+                  </span>
+                )}
+                <div className="ml-auto flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Sparkles className="h-3.5 w-3.5 text-rose-500" /> AI prompt
+                </div>
               </div>
+
+              {/* Effort selector */}
+              <div className="mb-3 rounded-xl border border-border bg-secondary/60 p-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+                    <Gauge className="h-3.5 w-3.5" /> Effort
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Est. cost <span className="font-mono text-foreground">{effortLevels[effortIdx].cost}</span>
+                  </div>
+                </div>
+                <div className="relative mt-2 flex gap-1 rounded-lg border border-border bg-background p-1" role="group" aria-label="Effort level">
+                  {effortLevels.map((l) => (
+                    <button
+                      key={l.id}
+                      onClick={() => setEffort(l.id)}
+                      onMouseEnter={() => setHoverEffort(l.id)}
+                      onMouseLeave={() => setHoverEffort(null)}
+                      aria-pressed={effort === l.id}
+                      className={`relative flex-1 rounded-md px-2 py-2 text-xs transition-colors ${
+                        effort === l.id ? "text-background" : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {effort === l.id && <motion.div layoutId="builder-effort" className="absolute inset-0 rounded-md bg-foreground" />}
+                      <span className="relative flex flex-col items-center gap-0.5">
+                        <span className="font-medium">{l.label}</span>
+                        <span className={`font-mono text-[9px] ${effort === l.id ? "opacity-70" : "opacity-60"}`}>{l.cost}</span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-2 text-[11px] text-muted-foreground">{shownEffort.desc}</p>
+              </div>
+
               <textarea
                 ref={textareaRef}
                 value={prompt}
@@ -158,14 +253,20 @@ function Builder() {
                 onFocus={() => setShowSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 120)}
                 onKeyDown={onKeyDown}
-                placeholder="Describe the app you want to build…"
+                placeholder={mode === "plan" ? "Talk through the idea — no code will be generated…" : "Describe the app you want to build…"}
                 aria-autocomplete="list"
                 aria-expanded={showSuggestions && filtered.length > 0}
                 className="h-32 w-full resize-none bg-transparent text-base outline-none placeholder:text-muted-foreground"
               />
               <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3">
-                <Button onClick={generate} disabled={generating} className="btn-brand">
-                  {generating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating</> : <><Sparkles className="mr-2 h-4 w-4" /> Generate</>}
+                <Button onClick={generate} disabled={generating || planning} className="btn-brand">
+                  {mode === "plan" ? (
+                    planning ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Thinking</> : <><NotebookPen className="mr-2 h-4 w-4" /> Discuss plan</>
+                  ) : generating ? (
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating</>
+                  ) : (
+                    <><Sparkles className="mr-2 h-4 w-4" /> Generate</>
+                  )}
                 </Button>
                 <Button variant="outline">
                   <Wand2 className="mr-2 h-4 w-4" /> Improve
@@ -177,6 +278,46 @@ function Builder() {
               </div>
             </div>
           </div>
+
+          <AnimatePresence>
+            {mode === "plan" && (planning || plan) && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="surface rounded-2xl p-5"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="flex items-center gap-2 font-display text-lg"><NotebookPen className="h-4 w-4 text-rose-500" /> Plan</h3>
+                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">No credits used</span>
+                </div>
+                {planning ? (
+                  <div className="mt-3 space-y-2">
+                    {[0, 1, 2, 3].map((i) => (
+                      <div key={i} className="h-3 animate-pulse rounded bg-secondary" style={{ width: `${90 - i * 12}%` }} />
+                    ))}
+                  </div>
+                ) : (
+                  <ul className="mt-3 space-y-2">
+                    {plan?.map((line) => (
+                      <li key={line} className="flex gap-2 text-sm text-muted-foreground">
+                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-rose-500" /> {line}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {!planning && (
+                  <div className="mt-4 flex gap-2">
+                    <Button size="sm" className="btn-brand" onClick={() => setMode("build")}>
+                      Switch to Build <ArrowRight className="ml-1 h-3 w-3" />
+                    </Button>
+                    <Button size="sm" variant="ghost" className="text-muted-foreground" onClick={() => setPlan(null)}>Clear</Button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
 
           <div>
             <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Suggestions</div>

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { User, CreditCard, Bell, Key, Building2, Palette, Copy, Eye, EyeOff, Plug, Check } from "lucide-react";
+import { User, CreditCard, Bell, Key, Building2, Palette, Copy, Eye, EyeOff, Plug, Check, Gauge, Upload, Trash2, Github, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/settings")({
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/settings")({
 
 const tabs = [
   { id: "profile", label: "Profile", icon: User },
+  { id: "usage", label: "Usage & Access", icon: Gauge },
   { id: "appearance", label: "Appearance", icon: Palette },
   { id: "notifications", label: "Notifications", icon: Bell },
   { id: "connectors", label: "Connectors", icon: Plug },
@@ -23,6 +24,23 @@ const tabs = [
   { id: "api", label: "API Keys", icon: Key },
   { id: "workspace", label: "Workspace", icon: Building2 },
 ] as const;
+
+const effortLevels = [
+  { id: "low", label: "Low", desc: "Fast, minimal reasoning — small tweaks", cost: "~1x" },
+  { id: "medium", label: "Medium", desc: "Balanced — most tasks", cost: "~2x" },
+  { id: "high", label: "High", desc: "Deeper reasoning — complex features", cost: "~4x" },
+  { id: "max", label: "Max", desc: "Maximum reasoning — hardest problems, uses the most credits", cost: "~8x" },
+] as const;
+
+const weeklyUsage = [
+  { day: "Mon", credits: 120, project: "Lumen Finance" },
+  { day: "Tue", credits: 260, project: "Brewly Coffee" },
+  { day: "Wed", credits: 90, project: "Lumen Finance" },
+  { day: "Thu", credits: 340, project: "Nova CRM" },
+  { day: "Fri", credits: 180, project: "Brewly Coffee" },
+  { day: "Sat", credits: 45, project: "Playground" },
+  { day: "Sun", credits: 145, project: "Nova CRM" },
+];
 
 const connectorGroups = [
   {
