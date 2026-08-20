@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
   Sparkles, FolderKanban, Activity, Zap, Search, Bell, Plus, ArrowUpRight, TrendingUp,
@@ -21,35 +21,53 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 const sidebar = [
-  { label: "Overview", icon: LayoutGrid },
+  { label: "Overview", icon: LayoutGrid, to: "/dashboard" as const },
   { label: "Projects", icon: Folder },
   { label: "Templates", icon: Layers },
   { label: "Team", icon: Users },
-  { label: "MCP connections", icon: Plug },
+  { label: "MCP connections", icon: Plug, to: "/mcp" as const },
   { label: "Billing", icon: CreditCard },
-] as const;
+];
 
 function Dashboard() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
   return (
     <div className="mx-auto mt-6 flex max-w-7xl gap-6 px-4 pb-16">
       <aside className="surface sticky top-20 hidden h-[calc(100vh-6rem)] w-52 shrink-0 rounded-xl p-3 lg:block">
         <div className="mb-3 px-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Workspace</div>
         <nav className="space-y-0.5">
-          {sidebar.map((item, i) => {
+          {sidebar.map((item) => {
             const Icon = item.icon;
+            if (!item.to) {
+              return (
+                <div
+                  key={item.label}
+                  aria-disabled="true"
+                  className="flex w-full cursor-not-allowed items-center gap-2 rounded-md px-3 py-1.5 text-sm text-muted-foreground opacity-40"
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="flex-1 text-left">{item.label}</span>
+                  <span className="text-[9px] uppercase tracking-wider">Soon</span>
+                </div>
+              );
+            }
+            const active = pathname === item.to;
             return (
-              <button
+              <Link
                 key={item.label}
+                to={item.to}
                 className={`flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors ${
-                  i === 0 ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  active ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                 }`}
               >
                 <Icon className="h-4 w-4" />
                 {item.label}
-              </button>
+              </Link>
             );
           })}
         </nav>
+
         <div className="mt-5 rounded-lg border border-border bg-secondary p-3">
           <div className="text-xs font-medium">Upgrade to Pro</div>
           <p className="mt-1 text-[11px] text-muted-foreground">Unlimited apps & exports.</p>
