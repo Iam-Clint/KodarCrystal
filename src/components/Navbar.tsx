@@ -1,7 +1,10 @@
-import { Link } from "@tanstack/react-router";
-import { Moon, Sun, Github } from "lucide-react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { Moon, Sun, Github, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/ThemeProvider";
+
+const APP_ROUTES = ["/dashboard", "/builder", "/results", "/settings", "/mcp"];
+
 
 export function CrystalLogo({ className = "h-7 w-7" }: { className?: string }) {
   return (
