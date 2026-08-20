@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Sparkles, Wand2, Save, ChevronRight, Loader2, ArrowRight, CornerDownLeft } from "lucide-react";
+import { Sparkles, Wand2, Save, ChevronRight, Loader2, ArrowRight, CornerDownLeft, Hammer, NotebookPen, Gauge, Feather } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { categories, promptSuggestions, generatedPages, generatedPalette, generatedFeatures } from "@/lib/mock-data";
 
@@ -23,13 +23,28 @@ const templates = [
   { name: "Fitness App", color: "from-emerald-300 to-teal-300" },
 ];
 
+export const effortLevels = [
+  { id: "low", label: "Low", desc: "Fast, minimal reasoning — small tweaks", cost: "~1x" },
+  { id: "medium", label: "Medium", desc: "Balanced — most tasks", cost: "~2x" },
+  { id: "high", label: "High", desc: "Deeper reasoning — complex features", cost: "~4x" },
+  { id: "max", label: "Max", desc: "Maximum reasoning — hardest problems, uses the most credits", cost: "~8x" },
+] as const;
+
 function Builder() {
   const [prompt, setPrompt] = useState("");
   const [activeCat, setActiveCat] = useState("SaaS");
   const [generating, setGenerating] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
+  const [mode, setMode] = useState<"build" | "plan">("build");
+  const [effort, setEffort] = useState<(typeof effortLevels)[number]["id"]>("medium");
+  const [hoverEffort, setHoverEffort] = useState<string | null>(null);
+  const [planning, setPlanning] = useState(false);
+  const [plan, setPlan] = useState<string[] | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const shownEffort = effortLevels.find((e) => e.id === (hoverEffort ?? effort))!;
+  const effortIdx = effortLevels.findIndex((e) => e.id === effort);
 
   // Prefill from a prompt typed on the landing page.
   useEffect(() => {
@@ -41,9 +56,27 @@ function Builder() {
 
 
   const generate = () => {
+    if (mode === "plan") {
+      setPlanning(true);
+      setPlan(null);
+      setTimeout(() => {
+        setPlanning(false);
+        const idea = prompt.trim() || "your idea";
+        setPlan([
+          `Scope: a focused first version of ${idea}.`,
+          "Pages: Landing, Auth (login / signup), Dashboard, Detail view, Settings.",
+          "Data model: users, projects, items, activity_log — with per-user ownership.",
+          "Key flows: sign up → create first project → invite a teammate → publish.",
+          "Open questions: who pays (individual or team?), do you need offline support, which regions/currencies?",
+          "Suggested next step: switch to Build mode with Medium effort and generate the Dashboard first.",
+        ]);
+      }, 1200);
+      return;
+    }
     setGenerating(true);
     setTimeout(() => setGenerating(false), 1600);
   };
+
 
   const filtered = useMemo(() => {
     const q = prompt.trim().toLowerCase();
