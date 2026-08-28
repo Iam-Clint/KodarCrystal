@@ -70,8 +70,8 @@ export const generatedFeatures = [
 ];
 
 export const exportTargets = [
-  { name: "React", desc: "Vite + Tailwind + shadcn", icon: "Code2" },
-  { name: "Flutter", desc: "Cross-platform mobile", icon: "Smartphone" },
-  { name: "Figma", desc: "Editable design file", icon: "Figma" },
-  { name: "HTML/CSS", desc: "Static website", icon: "FileCode" },
+  { name: "React", desc: "Vite + Tailwind + shadcn", icon: "Code2", brand: "react" },
+  { name: "Flutter", desc: "Cross-platform mobile", icon: "Smartphone", brand: "flutter" },
+  { name: "Figma", desc: "Editable design file", icon: "Figma", brand: "figma" },
+  { name: "HTML/CSS", desc: "Static website", icon: "FileCode", brand: "html" },
 ];

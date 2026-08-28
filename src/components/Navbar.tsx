@@ -38,7 +38,7 @@ export function Navbar() {
   const isApp = APP_ROUTES.some((r) => pathname === r || pathname.startsWith(`${r}/`));
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/70 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/85 backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <div className="flex items-center gap-8">
           <Link to={isApp ? "/dashboard" : "/"} className="flex items-center gap-2">
@@ -50,7 +50,6 @@ export function Navbar() {
             <nav className="hidden items-center gap-1 md:flex">
               {[
                 { to: "/community", label: "Community" },
-                { to: "/mcp", label: "MCP" },
                 { to: "/pricing", label: "Pricing" },
               ].map((l) => (
                 <Link
@@ -66,14 +65,14 @@ export function Navbar() {
         </div>
         <div className="flex items-center gap-2">
           {!isApp && (
-            <a href="https://github.com" className="hidden h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground sm:flex">
+            <a href="https://github.com" aria-label="Crystal.dev on GitHub" className="hidden h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground sm:flex">
               <Github className="h-4 w-4" />
             </a>
           )}
           <button
             onClick={toggle}
             className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
-            aria-label="Toggle theme"
+            aria-label={resolved === "dark" ? "Switch to light theme" : "Switch to dark theme"}
           >
             {resolved === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
