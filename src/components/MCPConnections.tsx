@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Check, Plug, Search, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MCPDetailsDrawer } from "@/components/MCPDetailsDrawer";
+import { BrandIcon } from "@/components/BrandIcon";
 
 export type MCPServer = {
   id: string;
@@ -105,7 +106,7 @@ export function MCPConnections({ compact = false }: { compact?: boolean }) {
               className="surface flex cursor-pointer flex-col rounded-xl p-4 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/50"
             >
               <div className="flex items-start gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary font-mono text-xs font-medium">{s.mark}</div>
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary"><BrandIcon id={s.id} className="h-4 w-4" /></div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{s.name}</span>

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { User, CreditCard, Bell, Key, Building2, Palette, Copy, Eye, EyeOff, Plug, Check, Gauge, Upload, Trash2, Github, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BrandIcon } from "@/components/BrandIcon";
+import { useTheme } from "@/components/ThemeProvider";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -221,8 +223,8 @@ function Settings() {
                         return (
                           <motion.div key={c.id} whileHover={{ y: -3 }} className="surface flex flex-col rounded-xl p-4">
                             <div className="flex items-start gap-3">
-                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary font-mono text-xs font-medium">
-                                {c.mark}
+                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary">
+                                <BrandIcon id={c.id} className="h-4 w-4" />
                               </div>
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-2">

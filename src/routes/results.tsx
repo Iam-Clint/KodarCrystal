@@ -201,7 +201,6 @@ function Results() {
         <h2 className="mb-4 font-display text-xl">Export</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {exportTargets.map((e) => {
-            const Icon = iconMap[e.icon as keyof typeof iconMap];
             return (
               <motion.button
                 key={e.name}
@@ -216,7 +215,7 @@ function Results() {
                   ) : exportState[e.name] === "done" ? (
                     <Check className="h-4 w-4 text-emerald-500" />
                   ) : (
-                    <Icon className="h-4 w-4 text-rose-500" />
+                    <BrandIcon id={e.brand} className="h-4 w-4" />
                   )}
                 </div>
                 <div className="mt-3 font-medium">{e.name}</div>
