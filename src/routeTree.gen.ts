@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DocsRouteImport } from './routes/docs'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as McpRouteImport } from './routes/mcp'
@@ -40,6 +41,11 @@ const CommunityRoute = CommunityRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsRoute = DocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/builder': typeof BuilderRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/docs': typeof DocsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/builder': typeof BuilderRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/docs': typeof DocsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/builder': typeof BuilderRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/docs': typeof DocsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/builder'
     | '/community'
     | '/dashboard'
+    | '/docs'
     | '/forgot-password'
     | '/login'
     | '/mcp'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/builder'
     | '/community'
     | '/dashboard'
+    | '/docs'
     | '/forgot-password'
     | '/login'
     | '/mcp'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/builder'
     | '/community'
     | '/dashboard'
+    | '/docs'
     | '/forgot-password'
     | '/login'
     | '/mcp'
@@ -176,6 +188,7 @@ export interface RootRouteChildren {
   BuilderRoute: typeof BuilderRoute
   CommunityRoute: typeof CommunityRoute
   DashboardRoute: typeof DashboardRoute
+  DocsRoute: typeof DocsRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
@@ -214,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs': {
+      id: '/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof DocsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -280,6 +300,7 @@ const rootRouteChildren: RootRouteChildren = {
   BuilderRoute: BuilderRoute,
   CommunityRoute: CommunityRoute,
   DashboardRoute: DashboardRoute,
+  DocsRoute: DocsRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   McpRoute: McpRoute,
