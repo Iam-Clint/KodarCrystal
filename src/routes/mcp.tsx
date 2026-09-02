@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { AuthGate } from "@/components/AuthGate";
 import { Plug, ShieldCheck, ArrowLeft } from "lucide-react";
 import { MCPConnections } from "@/components/MCPConnections";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,11 @@ export const Route = createFileRoute("/mcp")({
       { property: "og:description", content: "Connect Crystal to the apps you already use — GitHub, Vercel, Supabase, Notion and more." },
     ],
   }),
-  component: MCPPage,
+  component: () => (
+    <AuthGate>
+      <MCPPage />
+    </AuthGate>
+  ),
 });
 
 function MCPPage() {

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Code2, Smartphone, Figma, FileCode, Download, Share2, Loader2, Check } from "lucide-react";
@@ -15,7 +16,11 @@ export const Route = createFileRoute("/results")({
       { name: "description", content: "Your AI-generated app concept, mockups, branding and exports — ready to ship." },
     ],
   }),
-  component: Results,
+  component: () => (
+    <AuthGate>
+      <Results />
+    </AuthGate>
+  ),
 });
 
 const tabs = ["Overview", "Features", "UI Screens", "Pages", "Branding", "Export"] as const;

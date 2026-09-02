@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useRouterState } from "@tanstack/react-router";
+import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import {
   Sparkles, FolderKanban, Activity, Zap, Search, Bell, Plus, ArrowUpRight, TrendingUp,
@@ -17,7 +18,11 @@ export const Route = createFileRoute("/dashboard")({
       { name: "description", content: "Your projects, AI usage and team activity at a glance." },
     ],
   }),
-  component: Dashboard,
+  component: () => (
+    <AuthGate>
+      <Dashboard />
+    </AuthGate>
+  ),
 });
 
 const sidebar = [
