@@ -2,12 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Code2, Smartphone, Figma, FileCode, Download, Share2, Loader2, Check } from "lucide-react";
+import { Download, Share2, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandIcon } from "@/components/BrandIcon";
 import { generatedPages, generatedPalette, generatedFeatures, exportTargets } from "@/lib/mock-data";
-
-const iconMap = { Code2, Smartphone, Figma, FileCode };
 
 export const Route = createFileRoute("/results")({
   head: () => ({
