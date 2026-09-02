@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import {
@@ -18,7 +19,11 @@ export const Route = createFileRoute("/workspace")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Workspace,
+  component: () => (
+    <AuthGate>
+      <Workspace />
+    </AuthGate>
+  ),
 });
 
 type Msg = { role: "user" | "ai"; text: string; files?: string[] };

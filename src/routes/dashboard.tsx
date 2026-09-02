@@ -1,12 +1,14 @@
-import { createFileRoute, Link, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import {
   Sparkles, FolderKanban, Activity, Zap, Search, Bell, Plus, ArrowUpRight, TrendingUp,
-  LayoutGrid, FolderKanban as Folder, Layers, Users, CreditCard, Plug,
+  LayoutGrid, FolderKanban as Folder, Layers, Users, CreditCard, Plug, LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MCPConnections } from "@/components/MCPConnections";
 import { stats, recentProjects, activity } from "@/lib/mock-data";
+import { signOut } from "@/lib/auth";
 
 const iconMap = { Sparkles, FolderKanban, Activity, Zap };
 
@@ -17,7 +19,11 @@ export const Route = createFileRoute("/dashboard")({
       { name: "description", content: "Your projects, AI usage and team activity at a glance." },
     ],
   }),
-  component: Dashboard,
+  component: () => (
+    <AuthGate>
+      <Dashboard />
+    </AuthGate>
+  ),
 });
 
 const sidebar = [
@@ -31,6 +37,7 @@ const sidebar = [
 
 function Dashboard() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
 
   return (
     <div className="mx-auto mt-6 flex max-w-7xl gap-6 px-4 pb-16">
@@ -75,7 +82,18 @@ function Dashboard() {
             <Link to="/pricing">Upgrade</Link>
           </Button>
         </div>
+
+        <button
+          onClick={() => {
+            signOut();
+            navigate({ to: "/", replace: true });
+          }}
+          className="mt-3 flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        >
+          <LogOut className="h-4 w-4" /> Log out
+        </button>
       </aside>
+
 
       <main className="min-w-0 flex-1">
         <div className="surface mb-5 flex items-center gap-2 rounded-xl px-3 py-2">

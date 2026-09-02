@@ -1,8 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { User, CreditCard, Bell, Key, Building2, Palette, Copy, Eye, EyeOff, Plug, Check, Gauge, Upload, Trash2, Github, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BrandIcon } from "@/components/BrandIcon";
+import { useTheme } from "@/components/ThemeProvider";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -11,7 +14,11 @@ export const Route = createFileRoute("/settings")({
       { name: "description", content: "Manage your profile, billing, notifications, API keys, connectors and workspace." },
     ],
   }),
-  component: Settings,
+  component: () => (
+    <AuthGate>
+      <Settings />
+    </AuthGate>
+  ),
 });
 
 const tabs = [
@@ -86,8 +93,8 @@ function Settings() {
         <h1 className="mt-1 font-display text-3xl md:text-4xl">Account & preferences</h1>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[200px_1fr]">
-        <aside className="surface h-fit rounded-xl p-1.5">
+      <div className="grid gap-5 md:grid-cols-[60px_1fr] lg:grid-cols-[200px_1fr]">
+        <aside className="surface sticky top-20 z-10 flex h-fit gap-1 overflow-x-auto rounded-xl p-1.5 md:block md:overflow-visible">
           {tabs.map((t) => {
             const Icon = t.icon;
             const isActive = active === t.id;
@@ -95,14 +102,18 @@ function Settings() {
               <button
                 key={t.id}
                 onClick={() => setActive(t.id)}
-                className={`flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors ${
+                title={t.label}
+                aria-label={t.label}
+                className={`flex shrink-0 items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors md:w-full md:justify-center lg:justify-start ${
                   isActive ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                 }`}
               >
-                <Icon className="h-4 w-4" /> {t.label}
+                <Icon className="h-4 w-4 shrink-0" />
+                <span className="md:hidden lg:inline">{t.label}</span>
               </button>
             );
           })}
+
         </aside>
 
         <motion.div key={active} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
@@ -136,19 +147,147 @@ function Settings() {
             </>
           )}
 
+          {active === "usage" && (
+            <div className="space-y-5">
+              <div className="surface rounded-xl p-5">
+                <div className="flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    <div className="text-xs text-muted-foreground">Current plan</div>
+                    <div className="mt-1 font-display text-2xl gradient-text">Pro</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-display text-2xl">1,820 <span className="text-base text-muted-foreground">/ 3,000</span></div>
+                    <div className="text-xs text-muted-foreground">credits remaining this cycle</div>
+                  </div>
+                </div>
+                <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-secondary">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: "60.6%" }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    className="h-full rounded-full bg-[var(--gradient-brand)]"
+                  />
+                </div>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-lg border border-border bg-secondary p-3">
+                    <div className="text-xs text-muted-foreground">Platform credits</div>
+                    <div className="mt-1 font-display text-xl">1,340 <span className="text-sm text-muted-foreground">/ 2,200</span></div>
+                    <p className="mt-1 text-[11px] text-muted-foreground">Prompting, planning and code generation.</p>
+                  </div>
+                  <div className="rounded-lg border border-border bg-secondary p-3">
+                    <div className="text-xs text-muted-foreground">Cloud / hosting credits</div>
+                    <div className="mt-1 font-display text-xl">480 <span className="text-sm text-muted-foreground">/ 800</span></div>
+                    <p className="mt-1 text-[11px] text-muted-foreground">Previews, deploys, storage and bandwidth.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="surface rounded-xl p-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display text-lg">This week</h3>
+                  <span className="text-xs text-muted-foreground">
+                    {weeklyUsage.reduce((a, d) => a + d.credits, 0)} credits used
+                  </span>
+                </div>
+                <div className="mt-4 flex h-36 items-end gap-2">
+                  {weeklyUsage.map((d) => {
+                    const max = Math.max(...weeklyUsage.map((w) => w.credits));
+                    return (
+                      <div key={d.day} className="flex flex-1 flex-col items-center gap-1.5">
+                        <motion.div
+                          initial={{ height: 0 }}
+                          animate={{ height: `${(d.credits / max) * 100}%` }}
+                          transition={{ duration: 0.5 }}
+                          title={`${d.day}: ${d.credits} credits — ${d.project}`}
+                          className="w-full rounded-t-md bg-gradient-to-t from-rose-400 to-amber-300"
+                        />
+                        <span className="text-[10px] text-muted-foreground">{d.day}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <ul className="mt-4 divide-y divide-border text-sm">
+                  {weeklyUsage.map((d) => (
+                    <li key={d.day} className="flex items-center justify-between py-1.5">
+                      <span className="text-muted-foreground">{d.day} · {d.project}</span>
+                      <span className="font-mono text-xs">{d.credits}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="surface rounded-xl p-5">
+                <h3 className="font-display text-lg">Default effort level</h3>
+                <p className="mt-1 text-sm text-muted-foreground">Applied to new prompts unless you change it in the builder.</p>
+                <div className="mt-4 grid gap-1 rounded-lg border border-border bg-secondary p-1 sm:grid-cols-4">
+                  {effortLevels.map((l) => (
+                    <button
+                      key={l.id}
+                      onClick={() => setDefaultEffort(l.id)}
+                      className={`relative rounded-md px-3 py-2 text-sm transition-colors ${
+                        defaultEffort === l.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {defaultEffort === l.id && <motion.div layoutId="effort-pill" className="absolute inset-0 rounded-md bg-background shadow-sm" />}
+                      <span className="relative flex items-center justify-center gap-1.5">
+                        {l.label} <span className="font-mono text-[10px] text-muted-foreground">{l.cost}</span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {effortLevels.find((l) => l.id === defaultEffort)?.desc}
+                </p>
+              </div>
+
+              <div className="surface rounded-xl p-5">
+                <h3 className="font-display text-lg">Guardrails</h3>
+                <div className="mt-3 space-y-3">
+                  <label className="flex items-center justify-between gap-4 rounded-lg border border-border bg-secondary p-3">
+                    <div>
+                      <div className="flex items-center gap-1.5 text-sm font-medium">
+                        <AlertTriangle className="h-3.5 w-3.5 text-amber-500" /> Warn me before high-cost actions
+                      </div>
+                      <div className="text-xs text-muted-foreground">Confirm before running High or Max effort prompts.</div>
+                    </div>
+                    <Toggle defaultOn />
+                  </label>
+                  <label className="flex items-center justify-between gap-4 rounded-lg border border-border bg-secondary p-3">
+                    <div>
+                      <div className="text-sm font-medium">Auto-fallback to Low effort under 15% balance</div>
+                      <div className="text-xs text-muted-foreground">Keeps you building when credits run low.</div>
+                    </div>
+                    <Toggle defaultOn={false} />
+                  </label>
+                </div>
+              </div>
+            </div>
+          )}
+
           {active === "appearance" && (
             <div className="surface rounded-xl p-5">
               <h3 className="font-display text-lg">Theme</h3>
-              <p className="mt-1 text-sm text-muted-foreground">Toggle between light and dark from the navbar.</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Follows your system preference by default — a manual choice is remembered and stays in sync with the navbar toggle.
+              </p>
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                {["Light", "Dark", "System"].map((t, i) => (
-                  <div key={t} className={`surface cursor-pointer rounded-lg p-3 ${i === 0 ? "ring-2 ring-rose-300" : ""}`}>
-                    <div className={`h-16 rounded-md ${i === 0 ? "bg-gradient-to-br from-amber-50 to-rose-100" : i === 1 ? "bg-gradient-to-br from-stone-900 to-stone-700" : "bg-gradient-to-br from-amber-100 to-stone-700"}`} />
-                    <div className="mt-2 text-sm font-medium">{t}</div>
-                  </div>
+                {([
+                  { id: "light", label: "Light", swatch: "bg-gradient-to-br from-amber-50 to-rose-100" },
+                  { id: "dark", label: "Dark", swatch: "bg-gradient-to-br from-stone-900 to-stone-700" },
+                  { id: "system", label: "System", swatch: "bg-gradient-to-br from-amber-100 to-stone-700" },
+                ] as const).map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => setTheme(t.id)}
+                    className={`surface cursor-pointer rounded-lg p-3 text-left ${theme === t.id ? "ring-2 ring-rose-300" : ""}`}
+                  >
+                    <div className={`h-16 rounded-md ${t.swatch}`} />
+                    <div className="mt-2 text-sm font-medium">{t.label}</div>
+                  </button>
                 ))}
               </div>
             </div>
+
           )}
 
           {active === "notifications" && (
@@ -216,8 +355,8 @@ function Settings() {
                         return (
                           <motion.div key={c.id} whileHover={{ y: -3 }} className="surface flex flex-col rounded-xl p-4">
                             <div className="flex items-start gap-3">
-                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary font-mono text-xs font-medium">
-                                {c.mark}
+                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary">
+                                <BrandIcon id={c.id} className="h-4 w-4" />
                               </div>
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-2">

@@ -1,12 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Code2, Smartphone, Figma, FileCode, Download, Share2, Loader2, Check } from "lucide-react";
+import { Download, Share2, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandIcon } from "@/components/BrandIcon";
 import { generatedPages, generatedPalette, generatedFeatures, exportTargets } from "@/lib/mock-data";
-
-const iconMap = { Code2, Smartphone, Figma, FileCode };
 
 export const Route = createFileRoute("/results")({
   head: () => ({
@@ -15,7 +14,11 @@ export const Route = createFileRoute("/results")({
       { name: "description", content: "Your AI-generated app concept, mockups, branding and exports — ready to ship." },
     ],
   }),
-  component: Results,
+  component: () => (
+    <AuthGate>
+      <Results />
+    </AuthGate>
+  ),
 });
 
 const tabs = ["Overview", "Features", "UI Screens", "Pages", "Branding", "Export"] as const;
@@ -196,7 +199,6 @@ function Results() {
         <h2 className="mb-4 font-display text-xl">Export</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {exportTargets.map((e) => {
-            const Icon = iconMap[e.icon as keyof typeof iconMap];
             return (
               <motion.button
                 key={e.name}
@@ -211,7 +213,7 @@ function Results() {
                   ) : exportState[e.name] === "done" ? (
                     <Check className="h-4 w-4 text-emerald-500" />
                   ) : (
-                    <Icon className="h-4 w-4 text-rose-500" />
+                    <BrandIcon id={e.brand} className="h-4 w-4" />
                   )}
                 </div>
                 <div className="mt-3 font-medium">{e.name}</div>

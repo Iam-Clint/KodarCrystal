@@ -1,9 +1,11 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { Moon, Sun, Github, User } from "lucide-react";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { Moon, Sun, Github, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/ThemeProvider";
+import { signOut } from "@/lib/auth";
 
 const APP_ROUTES = ["/dashboard", "/builder", "/results", "/settings", "/mcp"];
+
 
 
 export function CrystalLogo({ className = "h-7 w-7" }: { className?: string }) {
@@ -31,7 +33,9 @@ export function CrystalLogo({ className = "h-7 w-7" }: { className?: string }) {
 
 export function Navbar() {
   const { resolved, toggle } = useTheme();
+  const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+
 
   if (pathname.startsWith("/workspace")) return null;
 
@@ -50,8 +54,10 @@ export function Navbar() {
             <nav className="hidden items-center gap-1 md:flex">
               {[
                 { to: "/community", label: "Community" },
+                { to: "/docs", label: "Docs" },
                 { to: "/pricing", label: "Pricing" },
               ].map((l) => (
+
                 <Link
                   key={l.to}
                   to={l.to}
@@ -77,17 +83,31 @@ export function Navbar() {
             {resolved === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
           {isApp ? (
-            <Link
-              to="/settings"
-              aria-label="Account settings"
-              className="flex h-8 items-center gap-2 rounded-full border border-border/60 py-1 pl-1 pr-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--gradient-brand)] text-white">
-                <User className="h-3.5 w-3.5" />
-              </span>
-              <span className="hidden sm:inline">Alex</span>
-            </Link>
+            <>
+              <Link
+                to="/settings"
+                aria-label="Account settings"
+                className="flex h-8 items-center gap-2 rounded-full border border-border/60 py-1 pl-1 pr-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--gradient-brand)] text-white">
+                  <User className="h-3.5 w-3.5" />
+                </span>
+                <span className="hidden sm:inline">Alex</span>
+              </Link>
+              <button
+                onClick={() => {
+                  signOut();
+                  navigate({ to: "/", replace: true });
+                }}
+                aria-label="Log out"
+                title="Log out"
+                className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+            </>
           ) : (
+
             <>
               <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground hidden sm:inline">
                 Log in

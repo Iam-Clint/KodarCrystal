@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import { Eye, GitFork, Search } from "lucide-react";
 import { useState } from "react";
@@ -10,7 +11,11 @@ export const Route = createFileRoute("/community")({
       { name: "description", content: "Browse, remix and learn from apps built by the Crystal community." },
     ],
   }),
-  component: Community,
+  component: () => (
+    <AuthGate>
+      <Community />
+    </AuthGate>
+  ),
 });
 
 const tags = ["All", "SaaS", "E-commerce", "Dashboard", "Portfolio", "AI", "Social", "Finance"];

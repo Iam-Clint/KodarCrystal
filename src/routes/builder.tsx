@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { AuthGate } from "@/components/AuthGate";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Sparkles, Wand2, Save, ChevronRight, Loader2, ArrowRight, CornerDownLeft, Hammer, NotebookPen, Gauge, Feather } from "lucide-react";
@@ -12,7 +13,11 @@ export const Route = createFileRoute("/builder")({
       { name: "description", content: "Describe your idea and watch Crystal design the app, pages, branding and features." },
     ],
   }),
-  component: Builder,
+  component: () => (
+    <AuthGate>
+      <Builder />
+    </AuthGate>
+  ),
 });
 
 const templates = [
