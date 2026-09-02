@@ -80,7 +80,18 @@ function Dashboard() {
             <Link to="/pricing">Upgrade</Link>
           </Button>
         </div>
+
+        <button
+          onClick={() => {
+            signOut();
+            navigate({ to: "/", replace: true });
+          }}
+          className="mt-3 flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        >
+          <LogOut className="h-4 w-4" /> Log out
+        </button>
       </aside>
+
 
       <main className="min-w-0 flex-1">
         <div className="surface mb-5 flex items-center gap-2 rounded-xl px-3 py-2">
