@@ -93,8 +93,8 @@ function Settings() {
         <h1 className="mt-1 font-display text-3xl md:text-4xl">Account & preferences</h1>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[200px_1fr]">
-        <aside className="surface h-fit rounded-xl p-1.5">
+      <div className="grid gap-5 md:grid-cols-[60px_1fr] lg:grid-cols-[200px_1fr]">
+        <aside className="surface sticky top-20 z-10 flex h-fit gap-1 overflow-x-auto rounded-xl p-1.5 md:block md:overflow-visible">
           {tabs.map((t) => {
             const Icon = t.icon;
             const isActive = active === t.id;
@@ -102,14 +102,18 @@ function Settings() {
               <button
                 key={t.id}
                 onClick={() => setActive(t.id)}
-                className={`flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors ${
+                title={t.label}
+                aria-label={t.label}
+                className={`flex shrink-0 items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors md:w-full md:justify-center lg:justify-start ${
                   isActive ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                 }`}
               >
-                <Icon className="h-4 w-4" /> {t.label}
+                <Icon className="h-4 w-4 shrink-0" />
+                <span className="md:hidden lg:inline">{t.label}</span>
               </button>
             );
           })}
+
         </aside>
 
         <motion.div key={active} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
