@@ -33,7 +33,9 @@ export function CrystalLogo({ className = "h-7 w-7" }: { className?: string }) {
 
 export function Navbar() {
   const { resolved, toggle } = useTheme();
+  const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+
 
   if (pathname.startsWith("/workspace")) return null;
 
