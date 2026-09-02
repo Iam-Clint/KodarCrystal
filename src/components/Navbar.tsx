@@ -54,8 +54,10 @@ export function Navbar() {
             <nav className="hidden items-center gap-1 md:flex">
               {[
                 { to: "/community", label: "Community" },
+                { to: "/docs", label: "Docs" },
                 { to: "/pricing", label: "Pricing" },
               ].map((l) => (
+
                 <Link
                   key={l.to}
                   to={l.to}
