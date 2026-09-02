@@ -1,13 +1,14 @@
-import { createFileRoute, Link, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import {
   Sparkles, FolderKanban, Activity, Zap, Search, Bell, Plus, ArrowUpRight, TrendingUp,
-  LayoutGrid, FolderKanban as Folder, Layers, Users, CreditCard, Plug,
+  LayoutGrid, FolderKanban as Folder, Layers, Users, CreditCard, Plug, LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MCPConnections } from "@/components/MCPConnections";
 import { stats, recentProjects, activity } from "@/lib/mock-data";
+import { signOut } from "@/lib/auth";
 
 const iconMap = { Sparkles, FolderKanban, Activity, Zap };
 
@@ -36,6 +37,7 @@ const sidebar = [
 
 function Dashboard() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
 
   return (
     <div className="mx-auto mt-6 flex max-w-7xl gap-6 px-4 pb-16">
