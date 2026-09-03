@@ -197,20 +197,8 @@ function Landing() {
 
 
             {/* template chips */}
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-              {templates.map((t) => {
-                const Icon = t.icon;
-                return (
-                  <button
-                    key={t.label}
-                    onClick={() => setPrompt(`Build a ${t.label.toLowerCase()} for…`)}
-                    className="surface group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground transition-all hover:-translate-y-0.5 hover:text-foreground"
-                  >
-                    <Icon className="h-3.5 w-3.5" /> {t.label}
-                  </button>
-                );
-              })}
-            </div>
+            <TemplateChips onSelect={pickTemplate} />
+
           </motion.div>
 
           <motion.div
