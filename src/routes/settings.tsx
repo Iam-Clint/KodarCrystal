@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { User, CreditCard, Bell, Key, Building2, Palette, Copy, Eye, EyeOff, Plug, Check, Gauge, Upload, Trash2, Github, AlertTriangle } from "lucide-react";
+import { User, CreditCard, Bell, Key, Building2, Palette, Copy, Eye, EyeOff, Plug, Check, Gauge, Upload, Trash2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandIcon } from "@/components/BrandIcon";
 import { useTheme } from "@/components/ThemeProvider";
@@ -80,10 +80,21 @@ const connectorGroups = [
 function Settings() {
   const [active, setActive] = useState<typeof tabs[number]["id"]>("profile");
   const [showKey, setShowKey] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [defaultEffort, setDefaultEffort] = useState<typeof effortLevels[number]["id"]>("medium");
+  const [avatar, setAvatar] = useState<string | null>(null);
+  const [githubLinked, setGithubLinked] = useState(true);
   const [connected, setConnected] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(connectorGroups.flatMap((g) => g.items.map((i) => [i.id, !!i.connected]))),
   );
   const [connectorFilter, setConnectorFilter] = useState<"all" | "connected" | "available">("all");
+
+  const onAvatarFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) setAvatar(URL.createObjectURL(file));
+    e.target.value = "";
+  };
+
 
 
   return (
@@ -119,14 +130,65 @@ function Settings() {
         <motion.div key={active} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
           {active === "profile" && (
             <>
-              <div className="surface flex items-center gap-4 rounded-xl p-5">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--gradient-brand)] font-display text-xl text-white">AX</div>
+              <div className="surface flex flex-col gap-4 rounded-xl p-5 sm:flex-row sm:items-center">
+                {avatar ? (
+                  <img src={avatar} alt="Your profile avatar" className="h-16 w-16 shrink-0 rounded-full object-cover" />
+                ) : (
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[var(--gradient-brand)] font-display text-xl text-white">AX</div>
+                )}
                 <div className="flex-1">
                   <div className="font-display text-xl">Alex Reyes</div>
                   <div className="text-sm text-muted-foreground">alex@crystal.dev · Pro plan</div>
+                  <p className="mt-1 text-[11px] text-muted-foreground">PNG or JPG, up to 2MB. Preview only — nothing is uploaded.</p>
                 </div>
-                <Button variant="outline" size="sm">Change avatar</Button>
+                <div className="flex gap-2">
+                  <label className="inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-md border border-border px-3 text-sm transition-colors hover:bg-secondary">
+                    <Upload className="h-3.5 w-3.5" /> Upload
+                    <input type="file" accept="image/*" className="sr-only" onChange={onAvatarFile} aria-label="Upload avatar" />
+                  </label>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={!avatar}
+                    onClick={() => setAvatar(null)}
+                    className="text-muted-foreground"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" /> Remove
+                  </Button>
+                </div>
               </div>
+
+              <div className="surface rounded-xl p-5">
+                <h3 className="font-display text-lg">Connected account</h3>
+                <div className="mt-3 flex flex-wrap items-center gap-3 rounded-lg border border-border bg-secondary p-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-background">
+                    <BrandIcon id="github" className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">GitHub</span>
+                      {githubLinked && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-background px-2 py-0.5 text-[10px] text-muted-foreground">
+                          <Check className="h-3 w-3 text-rose-500" /> Connected
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {githubLinked ? "Sign in with GitHub and sync repos." : "Link GitHub to sign in and sync repos."}
+                    </p>
+                    {githubLinked && <div className="mt-1.5 truncate font-mono text-[10px] text-muted-foreground">alexr · 12 repos</div>}
+                  </div>
+                  <Button
+                    size="sm"
+                    variant={githubLinked ? "outline" : "default"}
+                    className={githubLinked ? "" : "btn-brand"}
+                    onClick={() => setGithubLinked((v) => !v)}
+                  >
+                    {githubLinked ? "Disconnect" : "Connect"}
+                  </Button>
+                </div>
+              </div>
+
               <div className="surface rounded-xl p-5">
                 <h3 className="font-display text-lg">Account details</h3>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
