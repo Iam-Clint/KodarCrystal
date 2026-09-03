@@ -93,7 +93,7 @@ function Landing() {
         <div className="mx-auto max-w-3xl px-4 pt-24 pb-20 text-center sm:pt-32">
           <motion.div
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur"
+            className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/80 px-3 py-1 text-xs text-muted-foreground"
           >
             <Sparkles className="h-3 w-3 text-rose-500" />
             Used by builders across Nigeria

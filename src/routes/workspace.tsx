@@ -84,7 +84,7 @@ function Workspace() {
   return (
     <div className="flex h-[calc(100vh-3.5rem)] w-full flex-col">
       {/* Project bar */}
-      <div className="flex h-11 items-center justify-between gap-2 border-b border-border/60 bg-background/60 px-3 backdrop-blur">
+      <div className="flex h-11 items-center justify-between gap-2 border-b border-border/60 bg-background px-3">
         <div className="flex min-w-0 items-center gap-2">
           <Link to="/dashboard" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
             <CrystalLogo className="h-4 w-4" /> Projects
@@ -172,7 +172,7 @@ function Workspace() {
 
         {/* PREVIEW */}
         <section className="flex min-h-0 flex-col bg-secondary/30">
-          <div className="flex h-11 items-center justify-between gap-2 border-b border-border/60 bg-background/60 px-3 backdrop-blur">
+          <div className="flex h-11 items-center justify-between gap-2 border-b border-border/60 bg-background px-3">
             <div className="flex items-center gap-1.5 rounded-md bg-secondary px-2.5 py-1 text-xs text-foreground">
               <Eye className="h-3.5 w-3.5" /> Live preview
             </div>

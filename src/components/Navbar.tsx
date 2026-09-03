@@ -42,7 +42,7 @@ export function Navbar() {
   const isApp = APP_ROUTES.some((r) => pathname === r || pathname.startsWith(`${r}/`));
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/85 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/95">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <div className="flex items-center gap-8">
           <Link to={isApp ? "/dashboard" : "/"} className="flex items-center gap-2">
