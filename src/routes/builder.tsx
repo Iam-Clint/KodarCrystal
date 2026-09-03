@@ -360,17 +360,8 @@ function Builder() {
             </div>
           </div>
 
-          <div>
-            <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Templates</div>
-            <div className="scrollbar-thin flex gap-3 overflow-x-auto pb-2">
-              {templates.map((t) => (
-                <motion.div whileHover={{ y: -3 }} key={t.name} className="surface shrink-0 cursor-pointer rounded-xl p-2">
-                  <div className={`h-20 w-36 rounded-lg bg-gradient-to-br ${t.color}`} />
-                  <div className="mt-2 px-1 text-xs font-medium">{t.name}</div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+          <TemplateStrip />
+
         </div>
 
         <PreviewPanel generating={generating} />
