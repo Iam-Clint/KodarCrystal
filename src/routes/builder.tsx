@@ -373,56 +373,8 @@ function Builder() {
           </div>
         </div>
 
-        <aside className="surface sticky top-20 h-fit rounded-2xl p-5">
-          <div className="mb-3 flex items-center justify-between">
-            <h3 className="font-display text-lg">Live preview</h3>
-            <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-medium text-rose-700">AI</span>
-          </div>
+        <PreviewPanel generating={generating} />
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={generating ? "loading" : "ready"}
-              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-              className="space-y-4"
-            >
-              <div>
-                <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pages</div>
-                <div className="grid grid-cols-2 gap-1.5">
-                  {generatedPages.map((p) => (
-                    <div key={p} className="rounded-md border border-border bg-secondary px-2 py-1.5 text-xs">{p}</div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Palette</div>
-                <div className="flex gap-1.5">
-                  {generatedPalette.map((c) => (
-                    <div key={c} className="flex-1">
-                      <div className="h-10 rounded-md border border-border" style={{ backgroundColor: c }} />
-                      <div className="mt-1 text-center font-mono text-[9px] text-muted-foreground">{c}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Features</div>
-                <ul className="space-y-1">
-                  {generatedFeatures.map((f) => (
-                    <li key={f} className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span className="h-1 w-1 rounded-full bg-rose-500" /> {f}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <Button asChild className="btn-brand w-full">
-                <Link to="/workspace">Open in workspace <ArrowRight className="ml-1 h-3 w-3" /></Link>
-              </Button>
-            </motion.div>
-          </AnimatePresence>
-        </aside>
       </div>
     </div>
   );
