@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AuthGate } from "@/components/AuthGate";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Sparkles, Wand2, Save, ChevronRight, Loader2, ArrowRight, CornerDownLeft, Hammer, NotebookPen, Gauge, Feather } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { categories, promptSuggestions, generatedPages, generatedPalette, generatedFeatures } from "@/lib/mock-data";
@@ -357,3 +357,94 @@ function Builder() {
     </div>
   );
 }
+
+/** Memoized so typing in the prompt textarea doesn't re-render these subtrees. */
+const SuggestionList = memo(function SuggestionList({ onPick }: { onPick: (s: string) => void }) {
+  return (
+    <div>
+      <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Suggestions</div>
+      <div className="space-y-1.5">
+        {promptSuggestions.map((s) => (
+          <button
+            key={s}
+            onClick={() => onPick(s)}
+            className="surface group flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm hover:bg-secondary"
+          >
+            <span>{s}</span>
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-hover:translate-x-1" />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+});
+
+const TemplateStrip = memo(function TemplateStrip() {
+  return (
+    <div>
+      <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Templates</div>
+      <div className="scrollbar-thin flex gap-3 overflow-x-auto pb-2">
+        {templates.map((t) => (
+          <motion.div whileHover={{ y: -3 }} key={t.name} className="surface shrink-0 cursor-pointer rounded-xl p-2">
+            <div className={`h-20 w-36 rounded-lg bg-gradient-to-br ${t.color}`} />
+            <div className="mt-2 px-1 text-xs font-medium">{t.name}</div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+});
+
+const PreviewPanel = memo(function PreviewPanel({ generating }: { generating: boolean }) {
+  return (
+    <aside className="surface sticky top-20 h-fit rounded-2xl p-5">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="font-display text-lg">Live preview</h3>
+        <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-medium text-rose-700">AI</span>
+      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={generating ? "loading" : "ready"}
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+          className="space-y-4"
+        >
+          <div>
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pages</div>
+            <div className="grid grid-cols-2 gap-1.5">
+              {generatedPages.map((p) => (
+                <div key={p} className="rounded-md border border-border bg-secondary px-2 py-1.5 text-xs">{p}</div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Palette</div>
+            <div className="flex gap-1.5">
+              {generatedPalette.map((c) => (
+                <div key={c} className="flex-1">
+                  <div className="h-10 rounded-md border border-border" style={{ backgroundColor: c }} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Features</div>
+            <ul className="space-y-1">
+              {generatedFeatures.map((f) => (
+                <li key={f} className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <span className="h-1 w-1 rounded-full bg-rose-500" /> {f}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <Button asChild className="btn-brand w-full">
+            <Link to="/workspace">Open in workspace <ArrowRight className="ml-1 h-3 w-3" /></Link>
+          </Button>
+        </motion.div>
+      </AnimatePresence>
+    </aside>
+  );
+});
