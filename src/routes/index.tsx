@@ -270,3 +270,59 @@ function Landing() {
     </main>
   );
 }
+
+/** Static below-the-fold grid — memoized so typing in the composer never re-renders it. */
+const CommunityGrid = memo(function CommunityGrid() {
+  return (
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {community.map((p, i) => (
+        <motion.button
+          key={p.title}
+          initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: i * 0.05 }}
+          whileHover={{ y: -4 }}
+          className="group surface overflow-hidden rounded-2xl text-left"
+        >
+          <div className={`relative aspect-[16/10] bg-gradient-to-br ${p.grad}`}>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.5),transparent_60%)]" />
+            <div className="absolute inset-x-0 bottom-0 flex h-12 items-center gap-1 bg-white/60 px-3">
+              <div className="h-1.5 w-1.5 rounded-full bg-red-400" />
+              <div className="h-1.5 w-1.5 rounded-full bg-yellow-400" />
+              <div className="h-1.5 w-1.5 rounded-full bg-green-400" />
+              <div className="ml-2 truncate text-[10px] text-foreground/70">{p.title.toLowerCase().replace(/\s+/g, "")}.crystal.app</div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between p-4">
+            <div>
+              <div className="font-medium">{p.title}</div>
+              <div className="text-xs text-muted-foreground">by @{p.author}</div>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1"><Eye className="h-3 w-3" /> {p.views}</span>
+              <span className="flex items-center gap-1"><GitFork className="h-3 w-3" /> {p.remixes}</span>
+            </div>
+          </div>
+        </motion.button>
+      ))}
+    </div>
+  );
+});
+
+const TemplateChips = memo(function TemplateChips({ onSelect }: { onSelect: (label: string) => void }) {
+  return (
+    <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+      {templates.map((t) => {
+        const Icon = t.icon;
+        return (
+          <button
+            key={t.label}
+            onClick={() => onSelect(t.label)}
+            className="surface group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Icon className="h-3.5 w-3.5" /> {t.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+});
