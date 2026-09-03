@@ -324,21 +324,8 @@ function Builder() {
           </AnimatePresence>
 
 
-          <div>
-            <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Suggestions</div>
-            <div className="space-y-1.5">
-              {promptSuggestions.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setPrompt(s)}
-                  className="surface group flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm hover:bg-secondary"
-                >
-                  <span>{s}</span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-hover:translate-x-1" />
-                </button>
-              ))}
-            </div>
-          </div>
+          <SuggestionList onPick={setPrompt} />
+
 
 
           <div>
