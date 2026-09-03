@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowUp, Paperclip, Globe, Sparkles, Heart, Eye, GitFork, Wand2,
   ShoppingBag, BarChart3, Briefcase, GraduationCap, Smartphone, Users,
