@@ -74,6 +74,8 @@ function Landing() {
   }, []);
 
   const contextual = useMemo(() => getContextualSuggestions(prompt), [prompt]);
+  const pickTemplate = useCallback((label: string) => setPrompt(`Build a ${label.toLowerCase()} for…`), []);
+
   const showTrending = prompt.trim().length === 0;
 
   const submit = () => {
