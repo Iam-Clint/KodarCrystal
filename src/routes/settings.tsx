@@ -80,10 +80,21 @@ const connectorGroups = [
 function Settings() {
   const [active, setActive] = useState<typeof tabs[number]["id"]>("profile");
   const [showKey, setShowKey] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [defaultEffort, setDefaultEffort] = useState<typeof effortLevels[number]["id"]>("medium");
+  const [avatar, setAvatar] = useState<string | null>(null);
+  const [githubLinked, setGithubLinked] = useState(true);
   const [connected, setConnected] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(connectorGroups.flatMap((g) => g.items.map((i) => [i.id, !!i.connected]))),
   );
   const [connectorFilter, setConnectorFilter] = useState<"all" | "connected" | "available">("all");
+
+  const onAvatarFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) setAvatar(URL.createObjectURL(file));
+    e.target.value = "";
+  };
+
 
 
   return (
