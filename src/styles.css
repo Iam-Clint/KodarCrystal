@@ -127,20 +127,39 @@
     -webkit-font-smoothing: antialiased;
   }
   body {
+    min-height: 100vh;
+  }
+  /* Fixed, compositor-friendly ambience layer.
+     Previously these gradients lived on <body> with background-attachment: fixed,
+     which forces a full-viewport repaint on every scroll frame. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
     background-image:
       radial-gradient(ellipse 70% 40% at 50% 0%, oklch(0.85 0.15 30 / 0.18), transparent 70%),
       radial-gradient(ellipse 50% 30% at 90% 20%, oklch(0.8 0.18 350 / 0.12), transparent 70%),
       radial-gradient(ellipse 50% 30% at 10% 60%, oklch(0.85 0.15 60 / 0.12), transparent 70%);
-    background-attachment: fixed;
-    min-height: 100vh;
   }
-  .dark body {
+  .dark body::before {
     background-image:
       radial-gradient(ellipse 70% 40% at 50% 0%, oklch(0.7 0.2 0 / 0.15), transparent 70%),
       radial-gradient(ellipse 50% 30% at 90% 20%, oklch(0.6 0.2 350 / 0.1), transparent 70%);
   }
   h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.02em; font-weight: 400; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
+
 
 @layer utilities {
   .gradient-text {
