@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import {
   ArrowUp, Paperclip, Sparkles, Eye, Monitor, Tablet, Smartphone,
-  RefreshCw, ChevronRight, Loader2, Check, FileCode,
+  RefreshCw, ChevronRight, Loader2, Check, FileCode, ExternalLink, Maximize2, Minimize2,
 } from "lucide-react";
 import { CrystalLogo } from "@/components/Navbar";
+import { PreviewFrame } from "@/components/PreviewFrame";
 
 export const Route = createFileRoute("/workspace")({
   head: () => ({
