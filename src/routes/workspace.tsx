@@ -198,13 +198,25 @@ function Workspace() {
         </aside>
 
         {/* PREVIEW */}
-        <section className="flex min-h-0 flex-col bg-secondary/30">
-          <div className="flex h-11 items-center justify-between gap-2 border-b border-border/60 bg-background px-3">
-            <div className="flex items-center gap-1.5 rounded-md bg-secondary px-2.5 py-1 text-xs text-foreground">
-              <Eye className="h-3.5 w-3.5" /> Live preview
+        <section
+          className={`min-h-0 flex-col bg-secondary/30 lg:flex ${pane === "preview" ? "flex" : "hidden"}`}
+        >
+          <div className="flex h-11 items-center justify-between gap-2 border-b border-border/60 bg-background px-2 sm:px-3">
+            <div className="flex min-w-0 items-center gap-2">
+              {expanded && (
+                <button
+                  onClick={() => setExpanded(false)}
+                  className="hidden items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground lg:flex"
+                >
+                  <ChevronRight className="h-3.5 w-3.5 rotate-180" /> Back to chat
+                </button>
+              )}
+              <div className="flex shrink-0 items-center gap-1.5 rounded-md bg-secondary px-2 py-1 text-xs text-foreground sm:px-2.5">
+                <Eye className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Live preview</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              <div className="hidden items-center gap-0.5 rounded-lg border border-border bg-secondary p-0.5 sm:flex">
+            <div className="flex items-center gap-0.5 sm:gap-1">
+              <div className="flex items-center gap-0.5 rounded-lg border border-border bg-secondary p-0.5">
                 {[
                   { id: "desktop", icon: Monitor },
                   { id: "tablet", icon: Tablet },
@@ -224,16 +236,31 @@ function Workspace() {
                   );
                 })}
               </div>
-              <button className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent" aria-label="Refresh preview">
+              <button
+                onClick={() => window.open("/preview/brewly", "_blank", "noopener")}
+                className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
+                aria-label="Open preview in new tab"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+              </button>
+              <button
+                onClick={() => setExpanded((e) => !e)}
+                className="hidden h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground lg:flex"
+                aria-label={expanded ? "Collapse preview" : "Expand preview to full width"}
+              >
+                {expanded ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+              </button>
+              <button className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent" aria-label="Refresh preview">
                 <RefreshCw className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-auto p-6">
+          <div className="min-h-0 flex-1 overflow-auto p-3 sm:p-6">
             <PreviewFrame device={device} building={generating} />
           </div>
         </section>
+
       </div>
     </div>
   );
