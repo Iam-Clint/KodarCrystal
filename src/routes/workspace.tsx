@@ -95,14 +95,38 @@ function Workspace() {
           <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
           <div className="truncate text-sm font-medium">Brewly Coffee</div>
         </div>
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          <Sparkles className="h-3.5 w-3.5 text-rose-500" /> Building live
+        <div className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+          <Sparkles className="h-3.5 w-3.5 text-rose-500" />
+          <span className="hidden sm:inline">Building live</span>
         </div>
       </div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[380px_1fr]">
+      {/* Mobile / tablet pane switcher */}
+      <div className="flex items-center gap-1 border-b border-border/60 bg-background px-3 py-1.5 lg:hidden">
+        <div className="flex w-full items-center gap-0.5 rounded-lg border border-border bg-secondary p-0.5">
+          {(["chat", "preview"] as const).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPane(p)}
+              aria-pressed={pane === p}
+              className={`h-9 flex-1 rounded-md text-xs font-medium capitalize transition-colors ${
+                pane === p ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className={`grid min-h-0 flex-1 grid-cols-1 ${expanded ? "lg:grid-cols-1" : "lg:grid-cols-[380px_1fr]"}`}>
         {/* CHAT */}
-        <aside className="flex min-h-0 flex-col border-r border-border/60 bg-background/40">
+        <aside
+          className={`min-h-0 flex-col border-r border-border/60 bg-background/40 ${
+            pane === "chat" ? "flex" : "hidden"
+          } ${expanded ? "lg:hidden" : "lg:flex"}`}
+        >
+
           <div ref={chatRef} className="scrollbar-thin flex-1 space-y-4 overflow-y-auto p-4">
             {messages.map((m, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
