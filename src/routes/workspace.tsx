@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import {
   ArrowUp, Paperclip, Sparkles, Eye, Monitor, Tablet, Smartphone,
-  RefreshCw, ChevronRight, Loader2, Check, FileCode,
+  RefreshCw, ChevronRight, Loader2, Check, FileCode, ExternalLink, Maximize2, Minimize2,
 } from "lucide-react";
 import { CrystalLogo } from "@/components/Navbar";
+import { PreviewFrame } from "@/components/PreviewFrame";
 
 export const Route = createFileRoute("/workspace")({
   head: () => ({
@@ -44,6 +45,8 @@ function Workspace() {
   const [messages, setMessages] = useState<Msg[]>(defaultMessages);
   const [input, setInput] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [pane, setPane] = useState<"chat" | "preview">("chat");
+  const [expanded, setExpanded] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
 
   // Pick up the prompt the user typed on the landing page.
@@ -92,14 +95,38 @@ function Workspace() {
           <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
           <div className="truncate text-sm font-medium">Brewly Coffee</div>
         </div>
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          <Sparkles className="h-3.5 w-3.5 text-rose-500" /> Building live
+        <div className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+          <Sparkles className="h-3.5 w-3.5 text-rose-500" />
+          <span className="hidden sm:inline">Building live</span>
         </div>
       </div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[380px_1fr]">
+      {/* Mobile / tablet pane switcher */}
+      <div className="flex items-center gap-1 border-b border-border/60 bg-background px-3 py-1.5 lg:hidden">
+        <div className="flex w-full items-center gap-0.5 rounded-lg border border-border bg-secondary p-0.5">
+          {(["chat", "preview"] as const).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPane(p)}
+              aria-pressed={pane === p}
+              className={`h-9 flex-1 rounded-md text-xs font-medium capitalize transition-colors ${
+                pane === p ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className={`grid min-h-0 flex-1 grid-cols-1 ${expanded ? "lg:grid-cols-1" : "lg:grid-cols-[380px_1fr]"}`}>
         {/* CHAT */}
-        <aside className="flex min-h-0 flex-col border-r border-border/60 bg-background/40">
+        <aside
+          className={`min-h-0 flex-col border-r border-border/60 bg-background/40 ${
+            pane === "chat" ? "flex" : "hidden"
+          } ${expanded ? "lg:hidden" : "lg:flex"}`}
+        >
+
           <div ref={chatRef} className="scrollbar-thin flex-1 space-y-4 overflow-y-auto p-4">
             {messages.map((m, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
@@ -171,13 +198,25 @@ function Workspace() {
         </aside>
 
         {/* PREVIEW */}
-        <section className="flex min-h-0 flex-col bg-secondary/30">
-          <div className="flex h-11 items-center justify-between gap-2 border-b border-border/60 bg-background px-3">
-            <div className="flex items-center gap-1.5 rounded-md bg-secondary px-2.5 py-1 text-xs text-foreground">
-              <Eye className="h-3.5 w-3.5" /> Live preview
+        <section
+          className={`min-h-0 flex-col bg-secondary/30 lg:flex ${pane === "preview" ? "flex" : "hidden"}`}
+        >
+          <div className="flex h-11 items-center justify-between gap-2 border-b border-border/60 bg-background px-2 sm:px-3">
+            <div className="flex min-w-0 items-center gap-2">
+              {expanded && (
+                <button
+                  onClick={() => setExpanded(false)}
+                  className="hidden items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground lg:flex"
+                >
+                  <ChevronRight className="h-3.5 w-3.5 rotate-180" /> Back to chat
+                </button>
+              )}
+              <div className="flex shrink-0 items-center gap-1.5 rounded-md bg-secondary px-2 py-1 text-xs text-foreground sm:px-2.5">
+                <Eye className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Live preview</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              <div className="hidden items-center gap-0.5 rounded-lg border border-border bg-secondary p-0.5 sm:flex">
+            <div className="flex items-center gap-0.5 sm:gap-1">
+              <div className="flex items-center gap-0.5 rounded-lg border border-border bg-secondary p-0.5">
                 {[
                   { id: "desktop", icon: Monitor },
                   { id: "tablet", icon: Tablet },
@@ -197,55 +236,31 @@ function Workspace() {
                   );
                 })}
               </div>
-              <button className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent" aria-label="Refresh preview">
+              <button
+                onClick={() => window.open("/preview/brewly", "_blank", "noopener")}
+                className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
+                aria-label="Open preview in new tab"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+              </button>
+              <button
+                onClick={() => setExpanded((e) => !e)}
+                className="hidden h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground lg:flex"
+                aria-label={expanded ? "Collapse preview" : "Expand preview to full width"}
+              >
+                {expanded ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+              </button>
+              <button className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent" aria-label="Refresh preview">
                 <RefreshCw className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-auto p-6">
+          <div className="min-h-0 flex-1 overflow-auto p-3 sm:p-6">
             <PreviewFrame device={device} building={generating} />
           </div>
         </section>
-      </div>
-    </div>
-  );
-}
 
-function PreviewFrame({ device, building }: { device: "desktop" | "tablet" | "mobile"; building: boolean }) {
-  const width = device === "desktop" ? "max-w-4xl" : device === "tablet" ? "max-w-xl" : "max-w-[320px]";
-  return (
-    <div className={`mx-auto w-full ${width} transition-all`}>
-      <div className="surface overflow-hidden rounded-xl">
-        <div className="flex items-center gap-1.5 border-b border-border bg-secondary/50 px-3 py-2">
-          <div className="h-2 w-2 rounded-full bg-red-400" />
-          <div className="h-2 w-2 rounded-full bg-yellow-400" />
-          <div className="h-2 w-2 rounded-full bg-green-400" />
-          <div className="ml-3 text-[10px] text-muted-foreground">brewly.crystal.dev</div>
-          {building && <Loader2 className="ml-auto h-3 w-3 animate-spin text-muted-foreground" />}
-        </div>
-        <div className="bg-gradient-to-br from-rose-50 to-amber-50 p-6 dark:from-zinc-900 dark:to-zinc-800">
-          <div className="flex items-center justify-between">
-            <div className="font-display text-lg text-foreground">Brewly</div>
-            <div className="flex gap-3 text-[10px] text-muted-foreground">
-              <span>Beans</span><span>Plans</span><span>Story</span>
-            </div>
-          </div>
-          <div className="mt-8 text-center">
-            <div className="font-display text-3xl text-foreground">Coffee, <em className="italic">delivered</em>.</div>
-            <p className="mx-auto mt-2 max-w-sm text-xs text-muted-foreground">Freshly roasted beans at your door every week.</p>
-            <div className="mt-4 inline-flex rounded-md bg-foreground px-3 py-1.5 text-[10px] text-background">Subscribe</div>
-          </div>
-          <div className="mt-8 grid grid-cols-3 gap-3">
-            {["Ethiopia", "Colombia", "Sumatra"].map((b) => (
-              <div key={b} className="rounded-lg bg-background/70 p-3">
-                <div className="aspect-square rounded-md bg-gradient-to-br from-rose-200 to-amber-200" />
-                <div className="mt-2 text-[10px] text-foreground">{b}</div>
-                <div className="text-[9px] text-muted-foreground">Medium roast</div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );

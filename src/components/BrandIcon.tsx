@@ -16,11 +16,11 @@ import {
   SiReact,
   SiResend,
   SiSentry,
-  SiSlack,
   SiStripe,
   SiSupabase,
   SiVercel,
 } from "react-icons/si";
+import { FaSlack } from "react-icons/fa6";
 import { Server } from "lucide-react";
 
 type Brand = {
@@ -44,7 +44,7 @@ const BRANDS: Record<string, Brand> = {
   stripe: { Icon: SiStripe, color: "#635BFF" },
   figma: { Icon: SiFigma, color: "#F24E1E" },
   sentry: { Icon: SiSentry, color: "#362D59" },
-  slack: { Icon: SiSlack, color: "#4A154B" },
+  slack: { Icon: FaSlack, color: "#4A154B" },
   resend: { Icon: SiResend, color: "#000000" },
   react: { Icon: SiReact, color: "#61DAFB" },
   flutter: { Icon: SiFlutter, color: "#02569B" },

@@ -37,7 +37,7 @@ export function Navbar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
 
-  if (pathname.startsWith("/workspace")) return null;
+  if (pathname.startsWith("/workspace") || pathname.startsWith("/preview/")) return null;
 
   const isApp = APP_ROUTES.some((r) => pathname === r || pathname.startsWith(`${r}/`));
 
