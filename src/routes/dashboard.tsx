@@ -1,11 +1,13 @@
 import { createFileRoute, Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
 import {
   Sparkles, FolderKanban, Activity, Zap, Search, Bell, Plus, ArrowUpRight, TrendingUp,
-  LayoutGrid, FolderKanban as Folder, Layers, Users, CreditCard, Plug, LogOut,
+  LayoutGrid, FolderKanban as Folder, Layers, Users, CreditCard, Plug, LogOut, Menu, X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MCPConnections } from "@/components/MCPConnections";
 import { stats, recentProjects, activity } from "@/lib/mock-data";
 import { signOut } from "@/lib/auth";
@@ -35,87 +37,141 @@ const sidebar = [
   { label: "Billing", icon: CreditCard },
 ];
 
-function Dashboard() {
+function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
 
   return (
-    <div className="mx-auto mt-6 flex max-w-7xl gap-6 px-4 pb-16">
-      <aside className="surface sticky top-20 hidden h-[calc(100vh-6rem)] w-52 shrink-0 rounded-xl p-3 lg:block">
-        <div className="mb-3 px-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Workspace</div>
-        <nav className="space-y-0.5">
-          {sidebar.map((item) => {
-            const Icon = item.icon;
-            if (!item.to) {
-              return (
-                <div
-                  key={item.label}
-                  aria-disabled="true"
-                  className="flex w-full cursor-not-allowed items-center gap-2 rounded-md px-3 py-1.5 text-sm text-muted-foreground opacity-40"
-                >
-                  <Icon className="h-4 w-4" />
-                  <span className="flex-1 text-left">{item.label}</span>
-                  <span className="text-[9px] uppercase tracking-wider">Soon</span>
-                </div>
-              );
-            }
-            const active = pathname === item.to;
+    <>
+      <div className="mb-3 px-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Workspace</div>
+      <nav className="space-y-0.5">
+        {sidebar.map((item) => {
+          const Icon = item.icon;
+          if (!item.to) {
             return (
-              <Link
+              <div
                 key={item.label}
-                to={item.to}
-                className={`flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors ${
-                  active ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                }`}
+                aria-disabled="true"
+                className="flex w-full cursor-not-allowed items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground opacity-40 lg:py-1.5"
               >
                 <Icon className="h-4 w-4" />
-                {item.label}
-              </Link>
+                <span className="flex-1 text-left">{item.label}</span>
+                <span className="text-[9px] uppercase tracking-wider">Soon</span>
+              </div>
             );
-          })}
-        </nav>
+          }
+          const active = pathname === item.to;
+          return (
+            <Link
+              key={item.label}
+              to={item.to}
+              onClick={onNavigate}
+              className={`flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-sm transition-colors lg:py-1.5 ${
+                active ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+              }`}
+            >
+              <Icon className="h-4 w-4" />
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
 
-        <div className="mt-5 rounded-lg border border-border bg-secondary p-3">
-          <div className="text-xs font-medium">Upgrade to Pro</div>
-          <p className="mt-1 text-[11px] text-muted-foreground">Unlimited apps & exports.</p>
-          <Button asChild size="sm" className="mt-2 h-7 w-full text-xs btn-brand">
-            <Link to="/pricing">Upgrade</Link>
-          </Button>
-        </div>
+      <div className="mt-5 rounded-lg border border-border bg-secondary p-3">
+        <div className="text-xs font-medium">Upgrade to Pro</div>
+        <p className="mt-1 text-[11px] text-muted-foreground">Unlimited apps & exports.</p>
+        <Button asChild size="sm" className="mt-2 h-9 w-full text-xs btn-brand lg:h-7">
+          <Link to="/pricing" onClick={onNavigate}>Upgrade</Link>
+        </Button>
+      </div>
 
-        <button
-          onClick={() => {
-            signOut();
-            navigate({ to: "/", replace: true });
-          }}
-          className="mt-3 flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-        >
-          <LogOut className="h-4 w-4" /> Log out
-        </button>
+      <button
+        onClick={() => {
+          onNavigate?.();
+          signOut();
+          navigate({ to: "/", replace: true });
+        }}
+        className="mt-3 flex min-h-11 w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground lg:min-h-0"
+      >
+        <LogOut className="h-4 w-4" /> Log out
+      </button>
+    </>
+  );
+}
+
+function Dashboard() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [query, setQuery] = useState("");
+
+  const today = useMemo(
+    () => new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }),
+    [],
+  );
+
+  const projects = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return recentProjects;
+    return recentProjects.filter(
+      (p) => p.name.toLowerCase().includes(q) || p.type.toLowerCase().includes(q),
+    );
+  }, [query]);
+
+  return (
+    <div className="mx-auto mt-6 flex max-w-7xl gap-6 px-4 pb-16">
+      <aside className="surface sticky top-20 hidden h-[calc(100vh-6rem)] w-52 shrink-0 rounded-xl p-3 lg:block">
+        <SidebarNav />
       </aside>
 
-
       <main className="min-w-0 flex-1">
-        <div className="surface mb-5 flex items-center gap-2 rounded-xl px-3 py-2">
-          <Search className="h-4 w-4 text-muted-foreground" />
-          <input placeholder="Search projects, templates…" className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
-          <button className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-secondary">
+        <div className="surface mb-5 flex items-center gap-2 rounded-xl px-2 py-2 sm:px-3">
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+            <SheetTrigger asChild>
+              <button
+                aria-label="Open navigation menu"
+                className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground lg:hidden"
+              >
+                <Menu className="h-4 w-4" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[17rem] overflow-y-auto p-3 pt-12">
+              <SidebarNav onNavigate={() => setMenuOpen(false)} />
+            </SheetContent>
+          </Sheet>
+
+          <Search className="hidden h-4 w-4 shrink-0 text-muted-foreground sm:block" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search projects"
+            placeholder="Search projects, templates…"
+            className="h-11 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              aria-label="Clear search"
+              className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-secondary"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+          <button aria-label="Notifications" className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-secondary">
             <Bell className="h-4 w-4" />
           </button>
-          <div className="h-7 w-7 rounded-full bg-[var(--gradient-brand)]" />
+          <div className="hidden h-7 w-7 shrink-0 rounded-full bg-[var(--gradient-brand)] sm:block" />
         </div>
 
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <div className="text-xs text-muted-foreground">Tuesday, April 17</div>
-            <h1 className="mt-1 font-display text-3xl">Welcome back, <em className="italic gradient-text">Alex</em></h1>
+          <div className="min-w-0">
+            <div className="text-xs text-muted-foreground">{today}</div>
+            <h1 className="mt-1 font-display text-2xl sm:text-3xl">Welcome back, <em className="italic gradient-text">Alex</em></h1>
           </div>
           <Button asChild className="btn-brand">
             <Link to="/workspace"><Plus className="mr-1 h-4 w-4" /> New project</Link>
           </Button>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {stats.map((s, i) => {
             const Icon = iconMap[s.icon as keyof typeof iconMap];
             return (
@@ -139,34 +195,42 @@ function Dashboard() {
 
         <div className="mt-7 grid gap-5 lg:grid-cols-[2fr_1fr]">
           <div>
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="font-display text-xl">Recent projects</h2>
-              <button className="text-xs text-muted-foreground hover:text-foreground">View all →</button>
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="font-display text-xl">
+                {query ? `Results for “${query}”` : "Recent projects"}
+              </h2>
+              <button className="shrink-0 text-xs text-muted-foreground hover:text-foreground">View all →</button>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {recentProjects.map((p, i) => (
-                <motion.div
-                  key={p.name}
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-                  whileHover={{ y: -3 }}
-                  className="surface group cursor-pointer overflow-hidden rounded-xl"
-                >
-                  <div className={`relative aspect-[16/9] bg-gradient-to-br ${p.color}`}>
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.4),transparent_60%)]" />
-                  </div>
-                  <div className="flex items-center justify-between p-3">
-                    <div>
-                      <div className="text-sm font-medium">{p.name}</div>
-                      <div className="text-xs text-muted-foreground">{p.type}</div>
+            {projects.length === 0 ? (
+              <div className="surface rounded-xl p-6 text-sm text-muted-foreground">
+                No projects match “{query}”.
+              </div>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {projects.map((p, i) => (
+                  <motion.div
+                    key={p.name}
+                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
+                    whileHover={{ y: -3 }}
+                    className="surface group cursor-pointer overflow-hidden rounded-xl"
+                  >
+                    <div className={`relative aspect-[16/9] bg-gradient-to-br ${p.color}`}>
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.4),transparent_60%)]" />
                     </div>
-                    <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                      {p.updated}
-                      <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                    <div className="flex items-center justify-between p-3">
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-medium">{p.name}</div>
+                        <div className="truncate text-xs text-muted-foreground">{p.type}</div>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground">
+                        {p.updated}
+                        <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="space-y-5">
