@@ -45,6 +45,8 @@ function Workspace() {
   const [messages, setMessages] = useState<Msg[]>(defaultMessages);
   const [input, setInput] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [pane, setPane] = useState<"chat" | "preview">("chat");
+  const [expanded, setExpanded] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
 
   // Pick up the prompt the user typed on the landing page.
