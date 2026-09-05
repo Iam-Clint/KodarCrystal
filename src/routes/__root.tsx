@@ -6,13 +6,18 @@ import { ThemeProvider, themeInitScript } from "@/components/ThemeProvider";
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="glass-strong gradient-border max-w-md rounded-3xl p-10 text-center">
-        <h1 className="font-display text-7xl font-bold gradient-text">404</h1>
-        <h2 className="mt-4 text-xl font-semibold">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">This route hasn't been generated yet.</p>
-        <Link to="/" className="mt-6 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[var(--glow-purple)] to-[var(--glow-blue)] px-5 py-2.5 text-sm font-medium text-white">
-          Go home
-        </Link>
+      <div className="surface max-w-md rounded-3xl p-10 text-center">
+        <div className="font-display text-7xl gradient-text">404</div>
+        <h1 className="mt-4 text-xl font-semibold">Page not found</h1>
+        <p className="mt-2 text-sm text-muted-foreground">This page doesn't exist — maybe it was never generated.</p>
+        <div className="mt-6 flex items-center justify-center gap-3">
+          <Link to="/" className="btn-brand inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium">
+            Go home
+          </Link>
+          <Link to="/dashboard" className="inline-flex items-center justify-center rounded-lg border border-border px-5 py-2.5 text-sm font-medium hover:bg-secondary">
+            Dashboard
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -30,7 +35,7 @@ export const Route = createRootRoute({
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=JetBrains+Mono:wght@400;500&display=swap" },
     ],
   }),
   shellComponent: RootShell,

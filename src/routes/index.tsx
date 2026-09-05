@@ -262,8 +262,10 @@ function Landing() {
           <div className="flex gap-6">
             <Link to="/pricing">Pricing</Link>
             <Link to="/community">Community</Link>
-            <a href="#">Docs</a>
-            <a href="#">Privacy</a>
+            <Link to="/docs">Docs</Link>
+            <Link to="/changelog">Changelog</Link>
+            <Link to="/legal/terms">Terms</Link>
+            <Link to="/legal/privacy">Privacy</Link>
           </div>
         </div>
       </footer>

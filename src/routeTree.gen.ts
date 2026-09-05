@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BuilderRouteImport } from './routes/builder'
+import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DocsRouteImport } from './routes/docs'
@@ -22,6 +23,8 @@ import { Route as ResultsRouteImport } from './routes/results'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as WorkspaceRouteImport } from './routes/workspace'
+import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
+import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as PreviewBrewlyRouteImport } from './routes/preview.brewly'
 
 const IndexRoute = IndexRouteImport.update({
@@ -32,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
 const BuilderRoute = BuilderRouteImport.update({
   id: '/builder',
   path: '/builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChangelogRoute = ChangelogRouteImport.update({
+  id: '/changelog',
+  path: '/changelog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunityRoute = CommunityRouteImport.update({
@@ -89,6 +97,16 @@ const WorkspaceRoute = WorkspaceRouteImport.update({
   path: '/workspace',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
+  id: '/legal/privacy',
+  path: '/legal/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalTermsRoute = LegalTermsRouteImport.update({
+  id: '/legal/terms',
+  path: '/legal/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PreviewBrewlyRoute = PreviewBrewlyRouteImport.update({
   id: '/preview/brewly',
   path: '/preview/brewly',
@@ -98,6 +116,7 @@ const PreviewBrewlyRoute = PreviewBrewlyRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/builder': typeof BuilderRoute
+  '/changelog': typeof ChangelogRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
   '/docs': typeof DocsRoute
@@ -109,11 +128,14 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/workspace': typeof WorkspaceRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/preview/brewly': typeof PreviewBrewlyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/builder': typeof BuilderRoute
+  '/changelog': typeof ChangelogRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
   '/docs': typeof DocsRoute
@@ -125,12 +147,15 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/workspace': typeof WorkspaceRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/preview/brewly': typeof PreviewBrewlyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/builder': typeof BuilderRoute
+  '/changelog': typeof ChangelogRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
   '/docs': typeof DocsRoute
@@ -142,6 +167,8 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/workspace': typeof WorkspaceRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/preview/brewly': typeof PreviewBrewlyRoute
 }
 export interface FileRouteTypes {
@@ -149,6 +176,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/builder'
+    | '/changelog'
     | '/community'
     | '/dashboard'
     | '/docs'
@@ -160,11 +188,14 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/workspace'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/preview/brewly'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/builder'
+    | '/changelog'
     | '/community'
     | '/dashboard'
     | '/docs'
@@ -176,11 +207,14 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/workspace'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/preview/brewly'
   id:
     | '__root__'
     | '/'
     | '/builder'
+    | '/changelog'
     | '/community'
     | '/dashboard'
     | '/docs'
@@ -192,12 +226,15 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/workspace'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/preview/brewly'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BuilderRoute: typeof BuilderRoute
+  ChangelogRoute: typeof ChangelogRoute
   CommunityRoute: typeof CommunityRoute
   DashboardRoute: typeof DashboardRoute
   DocsRoute: typeof DocsRoute
@@ -209,6 +246,8 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SignupRoute: typeof SignupRoute
   WorkspaceRoute: typeof WorkspaceRoute
+  LegalPrivacyRoute: typeof LegalPrivacyRoute
+  LegalTermsRoute: typeof LegalTermsRoute
   PreviewBrewlyRoute: typeof PreviewBrewlyRoute
 }
 
@@ -226,6 +265,13 @@ declare module '@tanstack/react-router' {
       path: '/builder'
       fullPath: '/builder'
       preLoaderRoute: typeof BuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/changelog': {
+      id: '/changelog'
+      path: '/changelog'
+      fullPath: '/changelog'
+      preLoaderRoute: typeof ChangelogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/community': {
@@ -305,6 +351,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/privacy': {
+      id: '/legal/privacy'
+      path: '/legal/privacy'
+      fullPath: '/legal/privacy'
+      preLoaderRoute: typeof LegalPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/terms': {
+      id: '/legal/terms'
+      path: '/legal/terms'
+      fullPath: '/legal/terms'
+      preLoaderRoute: typeof LegalTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/preview/brewly': {
       id: '/preview/brewly'
       path: '/preview/brewly'
@@ -318,6 +378,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BuilderRoute: BuilderRoute,
+  ChangelogRoute: ChangelogRoute,
   CommunityRoute: CommunityRoute,
   DashboardRoute: DashboardRoute,
   DocsRoute: DocsRoute,
@@ -329,6 +390,8 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SignupRoute: SignupRoute,
   WorkspaceRoute: WorkspaceRoute,
+  LegalPrivacyRoute: LegalPrivacyRoute,
+  LegalTermsRoute: LegalTermsRoute,
   PreviewBrewlyRoute: PreviewBrewlyRoute,
 }
 export const routeTree = rootRouteImport
