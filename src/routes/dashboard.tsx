@@ -7,7 +7,7 @@ import {
   LayoutGrid, FolderKanban as Folder, Layers, Users, CreditCard, Plug, LogOut, Menu, X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { MCPConnections } from "@/components/MCPConnections";
 import { stats, recentProjects, activity } from "@/lib/mock-data";
 import { signOut } from "@/lib/auth";
@@ -134,6 +134,7 @@ function Dashboard() {
               </button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[17rem] overflow-y-auto p-3 pt-12">
+              <SheetTitle className="sr-only">Workspace navigation</SheetTitle>
               <SidebarNav onNavigate={() => setMenuOpen(false)} />
             </SheetContent>
           </Sheet>
