@@ -48,7 +48,7 @@ function SignupPage() {
     setLoading(true);
     setTimeout(() => {
       signIn();
-      navigate({ to: "/workspace" });
+      navigate({ to: "/dashboard" });
     }, 900);
   };
 
@@ -142,7 +142,10 @@ function SignupPage() {
             </Button>
           </motion.div>
           <motion.p variants={itemVariants} className="text-center text-[11px] text-muted-foreground">
-            By continuing you agree to our Terms & Privacy Policy.
+            By continuing you agree to our{" "}
+            <Link to="/legal/terms" className="underline hover:text-foreground">Terms</Link>
+            {" "}&{" "}
+            <Link to="/legal/privacy" className="underline hover:text-foreground">Privacy Policy</Link>.
           </motion.p>
         </motion.form>
 

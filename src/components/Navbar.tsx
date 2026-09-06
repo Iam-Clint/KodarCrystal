@@ -71,7 +71,7 @@ export function Navbar() {
         </div>
         <div className="flex items-center gap-2">
           {!isApp && (
-            <a href="https://github.com" aria-label="Crystal.dev on GitHub" className="hidden h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground sm:flex">
+            <a href="https://github.com/crystaldev" aria-label="Crystal.dev on GitHub" className="hidden h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground sm:flex">
               <Github className="h-4 w-4" />
             </a>
           )}

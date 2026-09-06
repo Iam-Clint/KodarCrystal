@@ -509,7 +509,7 @@ function Settings() {
               <div className="mt-4 rounded-lg border border-border bg-secondary p-3">
                 <div className="text-xs text-muted-foreground">Production key</div>
                 <div className="mt-1.5 flex items-center gap-2">
-                  <code className="flex-1 truncate font-mono text-sm">{showKey ? "pk_live_8a2f9d3e1c4b7a5f6e8d9c2b" : "pk_live_••••••••••••••••••••"}</code>
+                  <code className="flex-1 truncate font-mono text-sm">{showKey ? "pk_demo_xxxxxxxxxxxxxxxxxxxx" : "pk_demo_••••••••••••••••••••"}</code>
                   <button onClick={() => setShowKey((v) => !v)} className="rounded p-1.5 hover:bg-background">
                     {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
