@@ -206,8 +206,8 @@ function Dashboard() {
 
   const projects = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return recentProjects;
-    return recentProjects.filter(
+    if (!q) return projectsList;
+    return projectsList.filter(
       (p) => p.name.toLowerCase().includes(q) || p.type.toLowerCase().includes(q),
     );
   }, [query]);
@@ -305,26 +305,14 @@ function Dashboard() {
             ) : (
               <div className="grid gap-3 sm:grid-cols-2">
                 {projects.map((p, i) => (
-                  <motion.div
+                  <ProjectCard
                     key={p.name}
-                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-                    whileHover={{ y: -3 }}
-                    className="surface group cursor-pointer overflow-hidden rounded-xl"
-                  >
-                    <div className={`relative aspect-[16/9] bg-gradient-to-br ${p.color}`}>
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.4),transparent_60%)]" />
-                    </div>
-                    <div className="flex items-center justify-between p-3">
-                      <div className="min-w-0">
-                        <div className="truncate text-sm font-medium">{p.name}</div>
-                        <div className="truncate text-xs text-muted-foreground">{p.type}</div>
-                      </div>
-                      <div className="flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground">
-                        {p.updated}
-                        <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                      </div>
-                    </div>
-                  </motion.div>
+                    p={p}
+                    i={i}
+                    onRename={openRename}
+                    onDuplicate={duplicateProject}
+                    onDelete={setDeleteTarget}
+                  />
                 ))}
               </div>
             )}
