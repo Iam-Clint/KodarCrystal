@@ -64,6 +64,7 @@ function RootComponent() {
     <ThemeProvider>
       <Navbar />
       <Outlet />
+      <Toaster />
     </ThemeProvider>
   );
 }
