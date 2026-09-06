@@ -259,7 +259,7 @@ function Landing() {
       <footer className="border-t border-border/60">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-xs text-muted-foreground">
           <div>© 2026 Crystal.dev</div>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <Link to="/pricing">Pricing</Link>
             <Link to="/community">Community</Link>
             <Link to="/docs">Docs</Link>

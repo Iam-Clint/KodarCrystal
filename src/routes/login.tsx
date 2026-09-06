@@ -44,7 +44,7 @@ function LoginPage() {
     setLoading(true);
     setTimeout(() => {
       signIn();
-      navigate({ to: "/workspace" });
+      navigate({ to: "/dashboard" });
     }, 900);
   };
 
