@@ -142,7 +142,7 @@ function ProjectCard({
           <DropdownMenuItem onSelect={() => onDuplicate(p)}>
             <Copy className="h-4 w-4" /> Duplicate
           </DropdownMenuItem>
-          <DropdownMenuItem variant="destructive" onSelect={() => onDelete(p)}>
+          <DropdownMenuItem className="text-destructive focus:text-destructive" onSelect={() => onDelete(p)}>
             <Trash2 className="h-4 w-4" /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
