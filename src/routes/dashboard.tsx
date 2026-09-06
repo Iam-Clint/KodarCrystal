@@ -5,9 +5,20 @@ import { useMemo, useState } from "react";
 import {
   Sparkles, FolderKanban, Activity, Zap, Search, Bell, Plus, ArrowUpRight, TrendingUp,
   LayoutGrid, FolderKanban as Folder, Layers, Users, CreditCard, Plug, LogOut, Menu, X,
+  MoreVertical, Pencil, Copy, Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { MCPConnections } from "@/components/MCPConnections";
 import { stats, recentProjects, activity } from "@/lib/mock-data";
 import { signOut } from "@/lib/auth";
@@ -99,9 +110,94 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
+type Project = { name: string; type: string; updated: string; color: string };
+
+function ProjectCard({
+  p, i, onRename, onDuplicate, onDelete,
+}: {
+  p: Project; i: number;
+  onRename: (p: Project) => void;
+  onDuplicate: (p: Project) => void;
+  onDelete: (p: Project) => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
+      whileHover={{ y: -3 }}
+      className="surface group relative cursor-pointer overflow-hidden rounded-xl"
+    >
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            aria-label={`Options for ${p.name}`}
+            className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-md bg-background/70 text-foreground backdrop-blur-sm transition-opacity hover:bg-background/90 lg:opacity-0 lg:group-hover:opacity-100 lg:focus-visible:opacity-100 lg:group-focus-within:opacity-100"
+          >
+            <MoreVertical className="h-4 w-4" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onSelect={() => onRename(p)}>
+            <Pencil className="h-4 w-4" /> Rename
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => onDuplicate(p)}>
+            <Copy className="h-4 w-4" /> Duplicate
+          </DropdownMenuItem>
+          <DropdownMenuItem className="text-destructive focus:text-destructive" onSelect={() => onDelete(p)}>
+            <Trash2 className="h-4 w-4" /> Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <div className={`relative aspect-[16/9] bg-gradient-to-br ${p.color}`}>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.4),transparent_60%)]" />
+      </div>
+      <div className="flex items-center justify-between p-3">
+        <div className="min-w-0">
+          <div className="truncate text-sm font-medium">{p.name}</div>
+          <div className="truncate text-xs text-muted-foreground">{p.type}</div>
+        </div>
+        <div className="flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground">
+          {p.updated}
+          <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 function Dashboard() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [projectsList, setProjectsList] = useState<Project[]>(recentProjects);
+  const [renameTarget, setRenameTarget] = useState<Project | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<Project | null>(null);
+
+  const openRename = (p: Project) => {
+    setRenameTarget(p);
+    setRenameValue(p.name);
+  };
+  const confirmRename = () => {
+    const name = renameValue.trim();
+    if (name && renameTarget) {
+      setProjectsList((list) => list.map((x) => (x.name === renameTarget.name ? { ...x, name } : x)));
+    }
+    setRenameTarget(null);
+  };
+  const duplicateProject = (p: Project) => {
+    setProjectsList((list) => {
+      const idx = list.findIndex((x) => x.name === p.name);
+      const copy = { ...p, name: `${p.name} (copy)`, updated: "Just now" };
+      const next = [...list];
+      next.splice(idx + 1, 0, copy);
+      return next;
+    });
+  };
+  const confirmDelete = () => {
+    if (deleteTarget) {
+      setProjectsList((list) => list.filter((x) => x.name !== deleteTarget.name));
+    }
+    setDeleteTarget(null);
+  };
 
   const today = useMemo(
     () => new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }),
@@ -110,8 +206,8 @@ function Dashboard() {
 
   const projects = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return recentProjects;
-    return recentProjects.filter(
+    if (!q) return projectsList;
+    return projectsList.filter(
       (p) => p.name.toLowerCase().includes(q) || p.type.toLowerCase().includes(q),
     );
   }, [query]);
@@ -209,26 +305,14 @@ function Dashboard() {
             ) : (
               <div className="grid gap-3 sm:grid-cols-2">
                 {projects.map((p, i) => (
-                  <motion.div
+                  <ProjectCard
                     key={p.name}
-                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-                    whileHover={{ y: -3 }}
-                    className="surface group cursor-pointer overflow-hidden rounded-xl"
-                  >
-                    <div className={`relative aspect-[16/9] bg-gradient-to-br ${p.color}`}>
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.4),transparent_60%)]" />
-                    </div>
-                    <div className="flex items-center justify-between p-3">
-                      <div className="min-w-0">
-                        <div className="truncate text-sm font-medium">{p.name}</div>
-                        <div className="truncate text-xs text-muted-foreground">{p.type}</div>
-                      </div>
-                      <div className="flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground">
-                        {p.updated}
-                        <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                      </div>
-                    </div>
-                  </motion.div>
+                    p={p}
+                    i={i}
+                    onRename={openRename}
+                    onDuplicate={duplicateProject}
+                    onDelete={setDeleteTarget}
+                  />
                 ))}
               </div>
             )}
@@ -284,6 +368,47 @@ function Dashboard() {
           </div>
         </div>
       </main>
+
+      <Dialog open={renameTarget !== null} onOpenChange={(open) => !open && setRenameTarget(null)}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Rename project</DialogTitle>
+            <DialogDescription>Enter a new name for “{renameTarget?.name}”.</DialogDescription>
+          </DialogHeader>
+          <input
+            autoFocus
+            value={renameValue}
+            onChange={(e) => setRenameValue(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && confirmRename()}
+            aria-label="Project name"
+            className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus:border-ring"
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRenameTarget(null)}>Cancel</Button>
+            <Button className="btn-brand" onClick={confirmRename} disabled={!renameValue.trim()}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={deleteTarget !== null} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent className="sm:max-w-sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete project?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete {deleteTarget?.name}. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive text-white hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

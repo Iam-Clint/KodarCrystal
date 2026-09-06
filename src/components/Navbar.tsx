@@ -1,6 +1,11 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
-import { Moon, Sun, Github, User, LogOut } from "lucide-react";
+import { Moon, Sun, Github, User, LogOut, Keyboard, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuSeparator, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 import { useTheme } from "@/components/ThemeProvider";
 import { signOut } from "@/lib/auth";
 
@@ -83,29 +88,39 @@ export function Navbar() {
             {resolved === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
           {isApp ? (
-            <>
-              <Link
-                to="/settings"
-                aria-label="Account settings"
-                className="flex h-8 items-center gap-2 rounded-full border border-border/60 py-1 pl-1 pr-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--gradient-brand)] text-white">
-                  <User className="h-3.5 w-3.5" />
-                </span>
-                <span className="hidden sm:inline">Alex</span>
-              </Link>
-              <button
-                onClick={() => {
-                  signOut();
-                  navigate({ to: "/", replace: true });
-                }}
-                aria-label="Log out"
-                title="Log out"
-                className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <LogOut className="h-4 w-4" />
-              </button>
-            </>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  aria-label="Account menu"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--gradient-brand)] text-white transition-opacity hover:opacity-90"
+                >
+                  <User className="h-4 w-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-2 py-1.5">
+                  <div className="text-sm font-medium">Clint Andreas</div>
+                  <div className="text-xs text-muted-foreground">clint@crystal.dev</div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={() => navigate({ to: "/settings" })}>
+                  <Settings className="h-4 w-4" /> Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => toast("Keyboard shortcuts coming soon")}>
+                  <Keyboard className="h-4 w-4" /> Keyboard shortcuts
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive"
+                  onSelect={() => {
+                    signOut();
+                    navigate({ to: "/", replace: true });
+                  }}
+                >
+                  <LogOut className="h-4 w-4" /> Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
 
             <>

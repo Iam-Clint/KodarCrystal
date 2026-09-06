@@ -2,6 +2,7 @@ import { Outlet, createRootRoute, HeadContent, Scripts, Link } from "@tanstack/r
 import appCss from "../styles.css?url";
 import { Navbar } from "@/components/Navbar";
 import { ThemeProvider, themeInitScript } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -63,6 +64,7 @@ function RootComponent() {
     <ThemeProvider>
       <Navbar />
       <Outlet />
+      <Toaster />
     </ThemeProvider>
   );
 }
