@@ -24,6 +24,8 @@ export const Route = createFileRoute("/signup")({
       { name: "description", content: "Create your Crystal account and start turning prompts into full apps." },
       { property: "og:title", content: "Sign up — Crystal.dev" },
       { property: "og:description", content: "Create your Crystal account and start turning prompts into full apps." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: SignupPage,

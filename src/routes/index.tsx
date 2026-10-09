@@ -13,6 +13,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Create apps and websites by chatting with AI. From idea to deployed product in minutes." },
       { property: "og:title", content: "Crystal.dev — Prompt to App Builder" },
       { property: "og:description", content: "Create apps and websites by chatting with AI." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Landing,

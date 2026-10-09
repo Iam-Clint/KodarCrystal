@@ -2,6 +2,7 @@ import { ExternalLink, KeyRound, Plug, RefreshCw, ShieldCheck, Trash2 } from "lu
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { MCPActivity } from "@/components/MCPActivity";
+import { BrandIcon } from "@/components/BrandIcon";
 import type { MCPServer } from "@/components/MCPConnections";
 
 export function MCPDetailsDrawer({
@@ -22,7 +23,7 @@ export function MCPDetailsDrawer({
           <>
             <SheetHeader>
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary font-mono text-sm">{server.mark}</div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary"><BrandIcon id={server.id} className="h-5 w-5" /></div>
                 <div>
                   <SheetTitle className="font-display text-xl">{server.name}</SheetTitle>
                   <SheetDescription className="text-xs">{server.desc}</SheetDescription>

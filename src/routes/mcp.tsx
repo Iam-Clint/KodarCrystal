@@ -11,6 +11,8 @@ export const Route = createFileRoute("/mcp")({
       { name: "description", content: "Connect Crystal to the apps you already use — GitHub, Vercel, Supabase, Notion and more." },
       { property: "og:title", content: "MCP Connections — Crystal.dev" },
       { property: "og:description", content: "Connect Crystal to the apps you already use — GitHub, Vercel, Supabase, Notion and more." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (
