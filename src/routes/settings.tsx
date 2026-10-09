@@ -2,16 +2,22 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { User, CreditCard, Bell, Key, Building2, Palette, Copy, Eye, EyeOff, Plug, Check, Gauge, Upload, Trash2, AlertTriangle } from "lucide-react";
+import { User, CreditCard, Bell, Key, Building2, Palette, Copy, Eye, EyeOff, Plug, Check, Gauge, Upload, Trash2, AlertTriangle, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandIcon } from "@/components/BrandIcon";
 import { useTheme } from "@/components/ThemeProvider";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
       { title: "Settings — Crystal.dev" },
       { name: "description", content: "Manage your profile, billing, notifications, API keys, connectors and workspace." },
+      { property: "og:title", content: "Settings — Crystal.dev" },
+      { property: "og:description", content: "Manage your Crystal.dev account, appearance and integrations." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (
@@ -79,6 +85,7 @@ const connectorGroups = [
 
 function Settings() {
   const [active, setActive] = useState<typeof tabs[number]["id"]>("profile");
+  const [menuOpen, setMenuOpen] = useState(false);
   const [showKey, setShowKey] = useState(false);
   const { theme, setTheme } = useTheme();
   const [defaultEffort, setDefaultEffort] = useState<typeof effortLevels[number]["id"]>("medium");
@@ -105,26 +112,51 @@ function Settings() {
       </div>
 
       <div className="grid gap-5 md:grid-cols-[60px_1fr] lg:grid-cols-[200px_1fr]">
-        <aside className="surface sticky top-20 z-10 flex h-fit gap-1 overflow-x-auto rounded-xl p-1.5 md:block md:overflow-visible">
-          {tabs.map((t) => {
-            const Icon = t.icon;
-            const isActive = active === t.id;
-            return (
-              <button
-                key={t.id}
-                onClick={() => setActive(t.id)}
-                title={t.label}
-                aria-label={t.label}
-                className={`flex shrink-0 items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors md:w-full md:justify-center lg:justify-start ${
-                  isActive ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                }`}
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                <span className="md:hidden lg:inline">{t.label}</span>
-              </button>
-            );
-          })}
-
+        <div className="md:hidden">
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="min-h-11 gap-2" aria-label="Open Settings navigation">
+                <Menu className="h-4 w-4" /> {tabs.find((t) => t.id === active)?.label}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" aria-describedby={undefined}>
+              <SheetTitle>Settings</SheetTitle>
+              <nav aria-label="Mobile Settings" className="mt-6 space-y-1">
+                {tabs.map((t) => {
+                  const Icon = t.icon;
+                  return (
+                    <Button key={t.id} variant="ghost" aria-current={active === t.id ? "page" : undefined}
+                      className={`min-h-11 w-full justify-start gap-2.5 ${active === t.id ? "bg-secondary text-foreground" : "text-muted-foreground"}`}
+                      onClick={() => { setActive(t.id); setMenuOpen(false); }}>
+                      <Icon className="h-4 w-4" /> {t.label}
+                    </Button>
+                  );
+                })}
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
+        <aside className="sticky top-20 hidden h-fit md:block">
+          <TooltipProvider delayDuration={200}>
+            <nav aria-label="Settings" className="space-y-1">
+              {tabs.map((t) => {
+                const Icon = t.icon;
+                return (
+                  <Tooltip key={t.id}>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" aria-label={t.label} aria-current={active === t.id ? "page" : undefined}
+                        onClick={() => setActive(t.id)}
+                        className={`min-h-11 w-full justify-center px-2 lg:justify-start lg:gap-2.5 lg:px-3 ${active === t.id ? "bg-secondary text-foreground" : "text-muted-foreground"}`}>
+                        <Icon className="h-4 w-4 shrink-0" />
+                        <span className="hidden lg:inline">{t.label}</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="lg:hidden">{t.label}</TooltipContent>
+                  </Tooltip>
+                );
+              })}
+            </nav>
+          </TooltipProvider>
         </aside>
 
         <motion.div key={active} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
