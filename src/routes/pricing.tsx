@@ -9,6 +9,10 @@ export const Route = createFileRoute("/pricing")({
     meta: [
       { title: "Pricing — Crystal.dev" },
       { name: "description", content: "Simple plans for individuals, builders and teams." },
+      { property: "og:title", content: "Pricing — Crystal.dev" },
+      { property: "og:description", content: "Simple plans for individuals, builders and teams." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Pricing,

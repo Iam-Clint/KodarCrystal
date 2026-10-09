@@ -22,6 +22,8 @@ export const Route = createFileRoute("/forgot-password")({
       { name: "description", content: "Request a password reset link for your Crystal account." },
       { property: "og:title", content: "Reset your password — Crystal.dev" },
       { property: "og:description", content: "Request a password reset link for your Crystal account." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ForgotPasswordPage,

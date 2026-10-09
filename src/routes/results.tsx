@@ -12,6 +12,10 @@ export const Route = createFileRoute("/results")({
     meta: [
       { title: "Generated app — Crystal.dev" },
       { name: "description", content: "Your AI-generated app concept, mockups, branding and exports — ready to ship." },
+      { property: "og:title", content: "Generated app — Crystal.dev" },
+      { property: "og:description", content: "Your AI-generated app concept, mockups, branding and exports — ready to ship." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (

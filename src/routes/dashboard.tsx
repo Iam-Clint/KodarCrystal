@@ -30,6 +30,10 @@ export const Route = createFileRoute("/dashboard")({
     meta: [
       { title: "Dashboard — Crystal.dev" },
       { name: "description", content: "Your projects, AI usage and team activity at a glance." },
+      { property: "og:title", content: "Dashboard — Crystal.dev" },
+      { property: "og:description", content: "Your projects, AI usage and team activity at a glance." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (

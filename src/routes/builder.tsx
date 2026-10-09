@@ -11,6 +11,10 @@ export const Route = createFileRoute("/builder")({
     meta: [
       { title: "Builder — Crystal.dev" },
       { name: "description", content: "Describe your idea and watch Crystal design the app, pages, branding and features." },
+      { property: "og:title", content: "Builder — Crystal.dev" },
+      { property: "og:description", content: "Describe your idea and watch Crystal design the app, pages, branding and features." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (

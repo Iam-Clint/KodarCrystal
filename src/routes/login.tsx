@@ -24,6 +24,8 @@ export const Route = createFileRoute("/login")({
       { name: "description", content: "Sign in to Crystal to keep building beautiful apps with AI." },
       { property: "og:title", content: "Log in — Crystal.dev" },
       { property: "og:description", content: "Sign in to Crystal to keep building beautiful apps with AI." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: LoginPage,
