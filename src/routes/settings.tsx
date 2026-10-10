@@ -2,11 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AuthGate } from "@/components/AuthGate";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { User, CreditCard, Bell, Key, Building2, Palette, Copy, Eye, EyeOff, Plug, Check, Gauge, Upload, Trash2, AlertTriangle, Menu } from "lucide-react";
+import { User, CreditCard, Bell, Key, Building2, Palette, Plug, Check, Gauge, Upload, Trash2, AlertTriangle, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandIcon } from "@/components/BrandIcon";
 import { useTheme } from "@/components/ThemeProvider";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { AppearanceExtras, ApiKeysPanel, BillingPlans, DangerZone } from "@/components/SettingsExtras";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const Route = createFileRoute("/settings")({
@@ -86,7 +87,9 @@ const connectorGroups = [
 function Settings() {
   const [active, setActive] = useState<typeof tabs[number]["id"]>("profile");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showKey, setShowKey] = useState(false);
+  const [accent, setAccent] = useState("rose");
+  const [fontSize, setFontSize] = useState("Default");
+  const [compact, setCompact] = useState(false);
   const { theme, setTheme } = useTheme();
   const [defaultEffort, setDefaultEffort] = useState<typeof effortLevels[number]["id"]>("medium");
   const [avatar, setAvatar] = useState<string | null>(null);
@@ -105,7 +108,7 @@ function Settings() {
 
 
   return (
-    <div className="mx-auto mt-8 max-w-5xl px-4 pb-16">
+    <div data-accent={accent} data-font-size={fontSize} data-compact={compact} className="settings-page preferences-scope mx-auto mt-8 max-w-6xl px-4 pb-16">
       <div className="mb-7">
         <div className="text-xs uppercase tracking-widest text-muted-foreground">Settings</div>
         <h1 className="mt-1 font-display text-3xl md:text-4xl">Account & preferences</h1>
@@ -159,7 +162,7 @@ function Settings() {
           </TooltipProvider>
         </aside>
 
-        <motion.div key={active} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
+        <motion.div key={active} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: "easeOut" }} className="min-w-0 space-y-5">
           {active === "profile" && (
             <>
               <div className="surface flex flex-col gap-4 rounded-xl p-5 sm:flex-row sm:items-center">
@@ -380,6 +383,7 @@ function Settings() {
                   </button>
                 ))}
               </div>
+              <AppearanceExtras accent={accent} setAccent={setAccent} size={fontSize} setSize={setFontSize} compact={compact} setCompact={setCompact} />
             </div>
 
           )}
@@ -393,6 +397,8 @@ function Settings() {
                   ["Generation complete", "Notify me when a project finishes generating"],
                   ["Team activity", "Comments, mentions and shared edits"],
                   ["Billing alerts", "Payment success, failures and renewals"],
+                  ["Weekly digest", "Email summary of project activity"],
+                  ["Security alerts", "New sign-in from unrecognised device"],
                 ].map(([t, d], i) => (
                   <label key={t} className="flex items-center justify-between gap-4 rounded-lg border border-border bg-secondary p-3">
                     <div>
@@ -443,17 +449,17 @@ function Settings() {
                 return (
                   <div key={g.group}>
                     <div className="mb-2 text-xs uppercase tracking-widest text-muted-foreground">{g.group}</div>
-                    <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                       {items.map((c) => {
                         const on = connected[c.id];
                         return (
-                          <motion.div key={c.id} whileHover={{ y: -3 }} className="surface flex flex-col rounded-xl p-4">
+                          <motion.div key={c.id} whileHover={{ y: -3 }} className="surface flex min-h-[120px] flex-col justify-between rounded-lg p-4">
                             <div className="flex items-start gap-3">
                               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary">
                                 <BrandIcon id={c.id} className="h-4 w-4" />
                               </div>
                               <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-wrap items-center gap-2">
                                   <span className="font-medium">{c.name}</span>
                                   {on && (
                                     <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-[10px] text-muted-foreground">
@@ -467,7 +473,7 @@ function Settings() {
                                 )}
                               </div>
                             </div>
-                            <div className="mt-4 flex gap-2">
+                            <div className="mt-4 flex flex-wrap gap-2">
                               <Button
                                 size="sm"
                                 variant={on ? "outline" : "default"}
@@ -531,26 +537,11 @@ function Settings() {
                   ))}
                 </div>
               </div>
+              <BillingPlans />
             </div>
           )}
 
-          {active === "api" && (
-            <div className="surface rounded-xl p-5">
-              <h3 className="font-display text-lg">API keys</h3>
-              <p className="mt-1 text-sm text-muted-foreground">Use these keys to call the Crystal API.</p>
-              <div className="mt-4 rounded-lg border border-border bg-secondary p-3">
-                <div className="text-xs text-muted-foreground">Production key</div>
-                <div className="mt-1.5 flex items-center gap-2">
-                  <code className="flex-1 truncate font-mono text-sm">{showKey ? "pk_demo_xxxxxxxxxxxxxxxxxxxx" : "pk_demo_••••••••••••••••••••"}</code>
-                  <button onClick={() => setShowKey((v) => !v)} className="rounded p-1.5 hover:bg-background">
-                    {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                  <button className="rounded p-1.5 hover:bg-background"><Copy className="h-4 w-4" /></button>
-                </div>
-              </div>
-              <Button className="mt-4 btn-brand">Generate new key</Button>
-            </div>
-          )}
+          {active === "api" && (<div className="surface rounded-lg p-5"><ApiKeysPanel /></div>)}
 
           {active === "workspace" && (
             <div className="surface rounded-xl p-5">
@@ -579,6 +570,7 @@ function Settings() {
                   </div>
                 ))}
               </div>
+              <DangerZone />
             </div>
           )}
         </motion.div>
@@ -590,11 +582,6 @@ function Settings() {
 function Toggle({ defaultOn = true }: { defaultOn?: boolean }) {
   const [on, setOn] = useState(defaultOn);
   return (
-    <button
-      onClick={() => setOn((v) => !v)}
-      className={`relative h-5 w-9 rounded-full transition-colors ${on ? "bg-foreground" : "bg-border"}`}
-    >
-      <motion.div animate={{ x: on ? 18 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-0.5 h-4 w-4 rounded-full bg-background shadow" />
-    </button>
+    <Button variant="ghost" size="icon" role="switch" aria-checked={on} aria-label="Toggle preference" onClick={() => setOn(v => !v)} className="h-11 w-11 shrink-0 p-0"><span className={`relative h-5 w-9 rounded-full ${on ? "bg-foreground" : "bg-border"}`}><motion.span animate={{ x: on ? 18 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute left-0 top-0.5 h-4 w-4 rounded-full bg-background shadow" /></span></Button>
   );
 }
