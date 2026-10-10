@@ -1,4 +1,9 @@
 # Roadmap
+- [ ] Complete requested Settings sections and connector layout.
+- [ ] Expand dashboard project menus with local-state actions.
+- [ ] Add workspace Chat, Code, Preview, Versions and sharing.
+- [ ] Add subtle entrances and custom 404.
+- [ ] Verify flows, mobile layouts and MCP drawer; preserve auth pages/Navbar.
 - [x] Check Results, MCP and Settings brand icons.
 - [x] Add explicit community mount gate and memoized feed cards.
 - [x] Lazy-load Workspace, Community and MCP panel with Suspense.
