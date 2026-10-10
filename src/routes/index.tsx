@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowUp, Paperclip, Globe, Sparkles, Heart, Eye, GitFork, Wand2,
@@ -102,13 +103,13 @@ function Landing() {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.05 }}
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: "easeOut", delay: 0.05 }}
             className="mt-6 font-display text-5xl font-normal leading-[1.05] tracking-tight md:text-7xl"
           >
             Build something <em className="italic gradient-text">beautiful</em>
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: "easeOut", delay: 0.1 }}
             className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg"
           >
             Crystal.dev is a prompt to app builder — describe your idea, watch it become a real product.
@@ -116,7 +117,7 @@ function Landing() {
 
           {/* Prompt composer */}
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.6, delay: 0.15 }}
+            initial={{ opacity: 0, y: 20, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.45, ease: "easeOut", delay: 0.15 }}
             className="mx-auto mt-10 w-full max-w-2xl"
           >
             {/* Interactive suggestions — sit right above the prompt box */}
@@ -137,10 +138,10 @@ function Landing() {
                         <button
                           key={s.title}
                           onClick={() => setPrompt(s.title)}
-                          className="surface group flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs text-muted-foreground transition-colors hover:text-foreground"
+                          className="surface group flex items-center justify-between min-h-11 rounded-lg px-3 py-2 text-left text-xs text-muted-foreground transition-colors hover:text-foreground"
                         >
                           <span className="truncate">{s.title}</span>
-                          <span className="ml-2 shrink-0 rounded-full bg-secondary px-1.5 py-0.5 text-[10px] text-foreground/70">{s.tag}</span>
+                          <span className="ml-2 shrink-0 rounded-full bg-secondary px-1.5 py-0.5 text-[11px] text-foreground/70">{s.tag}</span>
                         </button>
                       ))}
                     </div>
@@ -160,7 +161,7 @@ function Landing() {
                         <button
                           key={s.title}
                           onClick={() => setPrompt((p) => p.trimEnd() + s.add)}
-                          className="surface flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                          className="surface flex items-center gap-1.5 min-h-11 rounded-full px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
                         >
                           <span className="text-rose-500">+</span> {s.title}
                         </button>
@@ -182,16 +183,16 @@ function Landing() {
               />
               <div className="flex items-center justify-between gap-2 px-1 pt-1">
                 <div className="flex items-center gap-1">
-                  <button className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent">
+                  <button className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground hover:bg-accent">
                     <Paperclip className="h-4 w-4" />
                   </button>
-                  <button className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent">
+                  <button className="flex items-center gap-1.5 min-h-11 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent">
                     <Globe className="h-3.5 w-3.5" /> Public
                   </button>
                 </div>
                 <button
                   onClick={submit}
-                  className="flex h-8 w-8 items-center justify-center rounded-md bg-foreground text-background transition-opacity hover:opacity-90 disabled:opacity-40"
+                  className="flex h-11 w-11 items-center justify-center rounded-md bg-foreground text-background transition-opacity hover:opacity-90 disabled:opacity-40"
                   disabled={!prompt.trim()}
                 >
                   <ArrowUp className="h-4 w-4" />
@@ -216,7 +217,7 @@ function Landing() {
 
       {/* FROM THE COMMUNITY */}
       <section className="mx-auto max-w-6xl px-4 py-20">
-        <div className="mb-8 flex items-end justify-between">
+        <div className="mb-8 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:flex sm:justify-between">
           <div>
             <div className="text-xs uppercase tracking-widest text-muted-foreground">From the community</div>
             <h2 className="mt-2 font-display text-3xl md:text-4xl">Popular this week</h2>
@@ -253,9 +254,7 @@ function Landing() {
       <section className="mx-auto max-w-3xl px-4 pb-24 text-center">
         <h2 className="font-display text-4xl md:text-5xl">Start building <em className="italic gradient-text">today</em></h2>
         <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">Join creators across Nigeria turning ideas into shipped products with Crystal.dev.</p>
-        <Link to="/workspace" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-foreground px-5 py-2.5 text-sm text-background hover:opacity-90">
-          <Heart className="h-4 w-4 fill-current" /> Start for free
-        </Link>
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}><Button asChild className="mt-6 min-h-11"><Link to="/workspace"><Heart className="h-4 w-4" />Start for free</Link></Button></motion.div>
       </section>
 
       <footer className="border-t border-border/60">
@@ -293,12 +292,12 @@ const CommunityGrid = memo(function CommunityGrid() {
               <div className="h-1.5 w-1.5 rounded-full bg-red-400" />
               <div className="h-1.5 w-1.5 rounded-full bg-yellow-400" />
               <div className="h-1.5 w-1.5 rounded-full bg-green-400" />
-              <div className="ml-2 truncate text-[10px] text-foreground/70">{p.title.toLowerCase().replace(/\s+/g, "")}.crystal.app</div>
+              <div className="ml-2 truncate text-[11px] text-foreground/70">{p.title.toLowerCase().replace(/\s+/g, "")}.crystal.app</div>
             </div>
           </div>
-          <div className="flex items-center justify-between p-4">
-            <div>
-              <div className="font-medium">{p.title}</div>
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 p-4">
+            <div className="min-w-0">
+              <div className="truncate font-medium">{p.title}</div>
               <div className="text-xs text-muted-foreground">by @{p.author}</div>
             </div>
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
@@ -321,7 +320,7 @@ const TemplateChips = memo(function TemplateChips({ onSelect }: { onSelect: (lab
           <button
             key={t.label}
             onClick={() => onSelect(t.label)}
-            className="surface group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            className="surface group flex items-center gap-1.5 min-h-11 rounded-full px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
           >
             <Icon className="h-3.5 w-3.5" /> {t.label}
           </button>

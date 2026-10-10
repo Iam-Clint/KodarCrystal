@@ -1,26 +1,25 @@
 import { Outlet, createRootRoute, HeadContent, Scripts, Link } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { CrystalLogo } from "@/components/Navbar";
 import { Navbar } from "@/components/Navbar";
 import { ThemeProvider, themeInitScript } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="surface max-w-md rounded-3xl p-10 text-center">
-        <div className="font-display text-7xl gradient-text">404</div>
-        <h1 className="mt-4 text-xl font-semibold">Page not found</h1>
-        <p className="mt-2 text-sm text-muted-foreground">This page doesn't exist — maybe it was never generated.</p>
-        <div className="mt-6 flex items-center justify-center gap-3">
-          <Link to="/" className="btn-brand inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium">
-            Go home
-          </Link>
-          <Link to="/dashboard" className="inline-flex items-center justify-center rounded-lg border border-border px-5 py-2.5 text-sm font-medium hover:bg-secondary">
-            Dashboard
-          </Link>
-        </div>
+    <main className="not-found-scene relative flex min-h-[calc(100dvh-56px)] items-center justify-center overflow-hidden px-4 py-12">
+      <div className="relative max-w-xl text-center">
+        <CrystalLogo className="mx-auto h-12 w-12" />
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} className="mt-6 font-display text-8xl gradient-text">404</motion.div>
+        <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }} className="mt-4 text-2xl">This page doesn't exist yet — but your next app does.</motion.h1>
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }} className="mt-7 flex flex-wrap justify-center gap-3">
+          <Button asChild className="min-h-11"><Link to="/">Go home</Link></Button>
+          <Button asChild variant="outline" className="min-h-11"><Link to="/workspace">Open workspace</Link></Button>
+        </motion.div>
       </div>
-    </div>
+    </main>
   );
 }
 

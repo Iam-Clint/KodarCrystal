@@ -35,14 +35,14 @@ export default function CommunityFeed() {
       <div className="mt-10 flex flex-col items-center gap-4">
         <div className="surface flex w-full max-w-md items-center gap-2 rounded-full px-4 py-2">
           <Search className="h-4 w-4 text-muted-foreground" />
-          <input placeholder="Search projects…" className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
+          <input placeholder="Search projects…" className="min-h-11 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
         </div>
         <div className="flex flex-wrap justify-center gap-2">
           {tags.map((t) => (
             <button
               key={t}
               onClick={() => setActive(t)}
-              className={`rounded-full border px-3 py-1 text-xs transition-colors ${active === t ? "border-foreground bg-foreground text-background" : "border-border bg-secondary text-muted-foreground hover:text-foreground"}`}
+              className={`min-h-11 rounded-full border px-3 py-1 text-xs transition-colors ${active === t ? "border-foreground bg-foreground text-background" : "border-border bg-secondary text-muted-foreground hover:text-foreground"}`}
             >
               {t}
             </button>
@@ -63,16 +63,16 @@ const ProjectCard = memo(function ProjectCard({ project, index }: { project: typ
   return (
           <motion.div
                         initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ delay: index * 0.03 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: index * 0.05 }}
             whileHover={{ y: -4 }}
             className="surface overflow-hidden rounded-2xl"
           >
             <Link to="/workspace" className={`block aspect-[16/10] bg-gradient-to-br ${project.grad}`}>
               <div className="h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.5),transparent_60%)]" />
             </Link>
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <div className="font-medium">{project.title}</div>
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 p-4">
+              <div className="min-w-0">
+                <div className="truncate font-medium">{project.title}</div>
                 <div className="text-xs text-muted-foreground">by @{project.author}</div>
               </div>
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
