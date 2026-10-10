@@ -3,3 +3,5 @@
 - Expose MCP connections through a shared lazy wrapper so every consumer loads the same on-demand panel; type-only imports must not eagerly load the panel.
 - Settings navigation uses the same tab definitions for a mobile Sheet, a tablet tooltip icon rail and a desktop labeled sidebar to keep navigation consistent.
 - Appearance controls and navbar theme controls must use the root ThemeProvider as their sole theme state source to prevent divergent selections.
+- Dashboard project actions identify local projects by stable IDs, never names, so rename and duplicate cannot target sibling cards.
+- Workspace modes and Settings extensions stay in browser-safe non-route modules; all actions remain simulated local state.
