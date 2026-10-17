@@ -80,7 +80,7 @@ export default function MCPConnectionsPanel({ compact = false }: { compact?: boo
                 >
                   {cat === c && <motion.div layoutId="mcp-cat" className="absolute inset-0 rounded-md bg-background shadow-sm" />}
                   <span className="relative">{c}</span>
-                </Button>
+                </button>
               ))}
             </div>
           </div>
