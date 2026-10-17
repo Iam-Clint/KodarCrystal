@@ -6,6 +6,7 @@ import { Download, Share2, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandIcon } from "@/components/BrandIcon";
 import { generatedPages, generatedPalette, generatedFeatures, exportTargets } from "@/lib/mock-data";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/results")({
   head: () => ({
@@ -49,8 +50,8 @@ function Results() {
           <p className="mt-3 max-w-xl text-sm text-muted-foreground">A modern personal finance app with AI-powered insights, smart budgeting and beautiful data visualization.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline"><Share2 className="mr-2 h-4 w-4" /> Share</Button>
-          <Button className="btn-brand"><Download className="mr-2 h-4 w-4" /> Export</Button>
+          <Button variant="outline" onClick={() => { navigator.clipboard?.writeText(window.location.href).catch(() => {}); toast.success("Link copied!"); }}><Share2 className="mr-2 h-4 w-4" /> Share</Button>
+          <Button className="btn-brand" onClick={() => runExport("React App")}><Download className="mr-2 h-4 w-4" /> Export</Button>
         </div>
       </div>
 

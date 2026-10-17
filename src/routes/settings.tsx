@@ -409,6 +409,7 @@ function Settings() {
                   </label>
                 ))}
               </div>
+              <Button className="mt-5 btn-brand">Save preferences</Button>
             </div>
           )}
 
@@ -570,6 +571,7 @@ function Settings() {
                   </div>
                 ))}
               </div>
+              <Button className="mt-5 btn-brand">Save changes</Button>
               <DangerZone />
             </div>
           )}

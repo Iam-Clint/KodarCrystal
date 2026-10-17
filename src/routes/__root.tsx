@@ -16,7 +16,7 @@ function NotFoundComponent() {
         <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }} className="mt-4 text-2xl">This page doesn't exist yet — but your next app does.</motion.h1>
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }} className="mt-7 flex flex-wrap justify-center gap-3">
           <Button asChild className="min-h-11"><Link to="/">Go home</Link></Button>
-          <Button asChild variant="outline" className="min-h-11"><Link to="/workspace">Open workspace</Link></Button>
+          <Button asChild variant="outline" className="min-h-11"><Link to="/dashboard">Go to dashboard</Link></Button>
         </motion.div>
       </div>
     </main>

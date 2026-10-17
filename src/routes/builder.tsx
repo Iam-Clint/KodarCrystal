@@ -136,6 +136,7 @@ function Builder() {
 
   return (
     <div className="mx-auto mt-8 max-w-7xl px-4 pb-16">
+      <Link to="/dashboard" className="mb-3 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">← Dashboard</Link>
       <div className="mb-6">
         <div className="text-xs uppercase tracking-widest text-muted-foreground">Builder</div>
         <h1 className="mt-1 font-display text-3xl md:text-4xl">Describe what you want to build</h1>
