@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Check } from "lucide-react";
@@ -72,8 +72,12 @@ function Pricing() {
               <span className="font-display text-5xl">${yearly ? p.yearly : p.monthly}</span>
               <span className="text-sm text-muted-foreground">/mo</span>
             </div>
-            <Button className={`mt-5 w-full ${p.featured ? "btn-brand" : ""}`} variant={p.featured ? "default" : "outline"}>
-              {p.name === "Free" ? "Start free" : p.name === "Team" ? "Contact sales" : "Start trial"}
+            <Button asChild className={`mt-5 w-full ${p.featured ? "btn-brand" : ""}`} variant={p.featured ? "default" : "outline"}>
+              {p.name === "Team" ? (
+                <a href="mailto:hello@crystal.dev">Contact sales</a>
+              ) : (
+                <Link to="/signup">{p.name === "Free" ? "Start free" : "Start trial"}</Link>
+              )}
             </Button>
             <ul className="mt-6 space-y-2 border-t border-border pt-5">
               {p.features.map((f) => (

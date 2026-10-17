@@ -369,9 +369,9 @@ function Settings() {
               </p>
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 {([
-                  { id: "light", label: "Light", swatch: "bg-gradient-to-br from-amber-50 to-rose-100" },
-                  { id: "dark", label: "Dark", swatch: "bg-gradient-to-br from-stone-900 to-stone-700" },
-                  { id: "system", label: "System", swatch: "bg-gradient-to-br from-amber-100 to-stone-700" },
+                  { id: "light", label: "Light", desc: "Always light", swatch: "bg-gradient-to-br from-amber-50 to-rose-100" },
+                  { id: "dark", label: "Dark", desc: "Always dark", swatch: "bg-gradient-to-br from-stone-900 to-stone-700" },
+                  { id: "system", label: "Auto", desc: "Follows device", swatch: "bg-gradient-to-br from-amber-100 to-stone-700" },
                 ] as const).map((t) => (
                   <button
                     key={t.id}
@@ -380,6 +380,7 @@ function Settings() {
                   >
                     <div className={`h-16 rounded-md ${t.swatch}`} />
                     <div className="mt-2 text-sm font-medium">{t.label}</div>
+                    <div className="text-[11px] text-muted-foreground">{t.desc}</div>
                   </button>
                 ))}
               </div>

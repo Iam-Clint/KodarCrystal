@@ -79,7 +79,7 @@ const sections = [
 
 function Docs() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
+    <div className="mx-auto max-w-6xl px-4 py-12 [scroll-behavior:smooth]">
       <div className="max-w-2xl">
         <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1 text-xs text-muted-foreground">
           <BookOpen className="h-3.5 w-3.5" /> Documentation
@@ -140,9 +140,14 @@ function Docs() {
               <div className="font-display text-xl">Ready to try it?</div>
               <p className="mt-1 text-sm text-muted-foreground">Start from a prompt — no setup required.</p>
             </div>
-            <Link to="/signup" className="btn-brand inline-flex h-10 items-center rounded-md px-4 text-sm font-medium">
-              Get started
-            </Link>
+            <div className="flex flex-wrap items-center gap-4">
+              <Link to="/signup" className="btn-brand inline-flex h-10 items-center rounded-md px-4 text-sm font-medium">
+                Get started
+              </Link>
+              <Link to="/changelog" className="text-sm text-muted-foreground hover:text-foreground">
+                Read the changelog →
+              </Link>
+            </div>
           </div>
         </div>
       </div>

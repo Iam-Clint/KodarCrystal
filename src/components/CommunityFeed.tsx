@@ -20,6 +20,7 @@ const projects = Array.from({ length: 12 }).map((_, i) => {
     remixes: 200 + i * 73,
     views: `${(2 + i * 0.7).toFixed(1)}k`,
     grad: grads[i % grads.length],
+    category: tags[1 + (i % (tags.length - 1))],
   };
 });
 
@@ -51,9 +52,11 @@ export default function CommunityFeed() {
       </div>
 
       <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {projects.map((p, i) => (
-          <ProjectCard key={p.title} project={p} index={i} />
-        ))}
+        {projects
+          .filter((p) => active === "All" || p.category === active)
+          .map((p, i) => (
+            <ProjectCard key={p.title} project={p} index={i} />
+          ))}
       </div>
     </div>
   );

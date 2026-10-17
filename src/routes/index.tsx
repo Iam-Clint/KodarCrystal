@@ -267,6 +267,7 @@ function Landing() {
             <Link to="/changelog">Changelog</Link>
             <Link to="/legal/terms">Terms</Link>
             <Link to="/legal/privacy">Privacy</Link>
+            <Link to="/error">Status page</Link>
           </div>
         </div>
       </footer>

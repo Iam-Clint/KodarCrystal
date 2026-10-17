@@ -1,6 +1,12 @@
-import { ExternalLink, KeyRound, Plug, RefreshCw, ShieldCheck, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ExternalLink, KeyRound, Loader2, Plug, RefreshCw, ShieldCheck, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { MCPActivity } from "@/components/MCPActivity";
 import { BrandIcon } from "@/components/BrandIcon";
 import type { MCPServer } from "@/components/MCPConnections";
@@ -16,6 +22,30 @@ export function MCPDetailsDrawer({
   onOpenChange: (open: boolean) => void;
   onToggle: (id: string) => void;
 }) {
+  const [syncing, setSyncing] = useState(false);
+  const [editingScopes, setEditingScopes] = useState(false);
+  const [checkedScopes, setCheckedScopes] = useState<Record<string, boolean>>({});
+  const [revokeOpen, setRevokeOpen] = useState(false);
+
+  // Reset per-server local state whenever a different server opens.
+  useEffect(() => {
+    setSyncing(false);
+    setEditingScopes(false);
+    setRevokeOpen(false);
+    setCheckedScopes(
+      server ? Object.fromEntries(server.scope.split(",").map((s) => [s.trim(), true])) : {},
+    );
+  }, [server?.id]);
+
+  const resync = () => {
+    if (syncing) return;
+    setSyncing(true);
+    setTimeout(() => {
+      setSyncing(false);
+      toast.success("Synced successfully");
+    }, 1200);
+  };
+
   return (
     <Sheet open={!!server} onOpenChange={onOpenChange}>
       <SheetContent className="w-full max-w-full overflow-y-auto sm:max-w-lg">

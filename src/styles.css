@@ -252,3 +252,18 @@
 @media (max-width: 639px) {
   .settings-page [class*="text-[10px]"], .settings-page [class*="text-[9px]"] { font-size: 11px; }
 }
+
+/* Spinning gears (404 / error pages) */
+@keyframes gear-spin { to { transform: rotate(360deg); } }
+.gear-spin-cw { animation: gear-spin 12s linear infinite; }
+.gear-spin-ccw { animation: gear-spin 12s linear infinite reverse; }
+
+/* Subtle broken-screen glitch flicker */
+@keyframes glitch {
+  0%, 87%, 100% { transform: translateX(0); opacity: 1; }
+  89% { transform: translateX(-3px); opacity: 0.85; }
+  91% { transform: translateX(3px); }
+  93% { transform: translateX(-1px); opacity: 0.9; }
+  95% { transform: translateX(0); opacity: 1; }
+}
+.glitch-text { animation: glitch 2.6s steps(1) infinite; }
