@@ -2,7 +2,6 @@ import { Outlet, createRootRoute, HeadContent, Scripts, Link } from "@tanstack/r
 import appCss from "../styles.css?url";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { CrystalLogo } from "@/components/Navbar";
 import { Gears } from "@/components/Gears";
 import { Navbar } from "@/components/Navbar";
 import { ThemeProvider, themeInitScript } from "@/components/ThemeProvider";
