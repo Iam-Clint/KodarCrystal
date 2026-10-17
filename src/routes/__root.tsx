@@ -3,18 +3,21 @@ import appCss from "../styles.css?url";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { CrystalLogo } from "@/components/Navbar";
+import { Gears } from "@/components/Gears";
 import { Navbar } from "@/components/Navbar";
 import { ThemeProvider, themeInitScript } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
-    <main className="not-found-scene relative flex min-h-[calc(100dvh-56px)] items-center justify-center overflow-hidden px-4 py-12">
-      <div className="relative max-w-xl text-center">
-        <CrystalLogo className="mx-auto h-12 w-12" />
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} className="mt-6 font-display text-8xl gradient-text">404</motion.div>
-        <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }} className="mt-4 text-2xl">This page doesn't exist yet — but your next app does.</motion.h1>
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }} className="mt-7 flex flex-wrap justify-center gap-3">
+    <main className="not-found-scene relative flex min-h-[calc(100dvh-56px)] items-center justify-center overflow-hidden px-4 py-10">
+      <div className="relative flex max-w-xl flex-col items-center text-center">
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: "easeOut" }}>
+          <Gears />
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }} className="glitch-text mt-2 font-display text-8xl gradient-text">404</motion.div>
+        <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }} className="mt-3 text-2xl">This page doesn't exist.</motion.h1>
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }} className="mt-6 flex flex-wrap justify-center gap-3">
           <Button asChild className="min-h-11"><Link to="/">Go home</Link></Button>
           <Button asChild variant="outline" className="min-h-11"><Link to="/dashboard">Go to dashboard</Link></Button>
         </motion.div>
