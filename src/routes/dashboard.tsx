@@ -168,13 +168,13 @@ function Dashboard() {
           <button aria-label="Notifications" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-secondary">
             <Bell className="h-4 w-4" />
           </button>
-          <div className="hidden h-7 w-7 shrink-0 rounded-full bg-[var(--gradient-brand)] sm:block" />
+          <Link to="/settings" aria-label="Open settings" className="hidden shrink-0 sm:block"><div className="h-7 w-7 rounded-full bg-[var(--gradient-brand)]" /></Link>
         </div>
 
         <div className="mb-6 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:flex sm:justify-between">
           <div className="min-w-0">
             <div className="text-xs text-muted-foreground">{today}</div>
-            <h1 className="mt-1 font-display text-2xl sm:text-3xl">Welcome back, <em className="italic gradient-text">Alex</em></h1>
+            <h1 className="mt-1 font-display text-2xl sm:text-3xl">Welcome back, <em className="italic gradient-text">there</em></h1>
           </div>
           <Button asChild className="btn-brand">
             <Link to="/workspace"><Plus className="mr-1 h-4 w-4" /> New project</Link>
@@ -209,7 +209,7 @@ function Dashboard() {
               <h2 className="min-w-0 truncate font-display text-xl">
                 {query ? `Results for “${query}”` : "Recent projects"}
               </h2>
-              <button className="shrink-0 text-xs text-muted-foreground hover:text-foreground">View all →</button>
+              <Link to="/community" className="shrink-0 text-xs text-muted-foreground hover:text-foreground">View all →</Link>
             </div>
             {projects.length === 0 ? (
               <div className="surface rounded-xl p-6 text-sm text-muted-foreground">
@@ -261,7 +261,7 @@ function Dashboard() {
               </div>
               <p className="mt-2 text-xs text-muted-foreground">Try generating a "Habit tracker with social streaks" — trending in your niche.</p>
               <Button asChild size="sm" className="mt-3 h-7 w-full text-xs" variant="outline">
-                <Link to="/workspace">Try it</Link>
+                <Link to="/builder">Try it</Link>
               </Button>
             </div>
 

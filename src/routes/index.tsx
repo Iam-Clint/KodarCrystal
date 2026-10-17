@@ -254,7 +254,7 @@ function Landing() {
       <section className="mx-auto max-w-3xl px-4 pb-24 text-center">
         <h2 className="font-display text-4xl md:text-5xl">Start building <em className="italic gradient-text">today</em></h2>
         <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">Join creators across Nigeria turning ideas into shipped products with Crystal.dev.</p>
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}><Button asChild className="mt-6 min-h-11"><Link to="/workspace"><Heart className="h-4 w-4" />Start for free</Link></Button></motion.div>
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}><Button asChild className="mt-6 min-h-11"><Link to="/signup"><Heart className="h-4 w-4" />Start for free</Link></Button></motion.div>
       </section>
 
       <footer className="border-t border-border/60">
