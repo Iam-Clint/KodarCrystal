@@ -1,0 +1,6 @@
+import { FileText, GitBranch } from 'lucide-react';
+import type { PlannedPage } from '@/lib/site-blueprint';
+export function ProjectSiteMap({ pages }: { pages: PlannedPage[] }) {
+  const root = pages.find(p => p.path === '/');
+  return <section aria-label="Site Map" className="mt-10 border-y border-border py-7"><h2 className="mb-6 flex items-center gap-2 font-display text-xl"><GitBranch className="h-4 w-4 text-brand" />Site Map</h2><div className="flex flex-col items-center"><div className="flex items-center gap-2 rounded-md border border-brand bg-brand/10 px-5 py-3"><FileText className="h-4 w-4 text-brand" /><code className="text-sm text-brand">/</code><span className="text-xs">{root?.name || 'Home'}</span></div><div className="h-6 w-px bg-border" /><div className="flex w-full flex-wrap justify-center gap-x-3 gap-y-5 border-t border-border pt-5">{pages.filter(p => p.path !== '/').map(p => <div key={p.path} className="relative flex min-w-28 flex-col items-center rounded-md border border-border bg-card px-3 py-2 before:absolute before:-top-5 before:h-5 before:w-px before:bg-border"><code className="text-xs">{p.path}</code><span className="mt-1 text-[11px] text-muted-foreground">{p.name}</span></div>)}</div></div></section>;
+}
