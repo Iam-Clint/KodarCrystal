@@ -267,3 +267,11 @@
   95% { transform: translateX(0); opacity: 1; }
 }
 .glitch-text { animation: glitch 2.6s steps(1) infinite; }
+
+/* Design-direction miniature previews, independent of the selected app theme. */
+.style-clean { --style-bg: oklch(1 0 0); --style-fg: oklch(0.2 0 0); --style-line: oklch(0.91 0 0); --style-accent: oklch(0.35 0 0); }
+.style-bold { --style-bg: var(--editor); --style-fg: var(--editor-foreground); --style-line: var(--editor-active); --style-accent: var(--brand); }
+.style-warm { --style-bg: oklch(0.96 0.025 75); --style-fg: oklch(0.3 0.02 30); --style-line: oklch(0.89 0.04 75); --style-accent: var(--brand-2); }
+@theme inline { --color-live: var(--live); }
+:root { --live: oklch(0.64 0.17 150); }
+.intake-dialog h2, .blueprint-builder h1, .blueprint-builder h2, .blueprint-builder h3 { letter-spacing: 0; }

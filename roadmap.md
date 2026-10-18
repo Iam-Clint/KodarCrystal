@@ -1,4 +1,9 @@
 # Roadmap
+- [ ] Add structured site blueprints, effort estimates and smart builder intake.
+- [ ] Add dashboard three-step project intake with typed URL handoff.
+- [ ] Add workspace page navigation and Results site map.
+- [ ] Add community submission dialog.
+- [ ] Test planning rules and verify all six requested flows on desktop/mobile.
 - [ ] Complete requested Settings sections and connector layout.
 - [ ] Expand dashboard project menus with local-state actions.
 - [ ] Add workspace Chat, Code, Preview, Versions and sharing.

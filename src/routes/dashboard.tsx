@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ProjectIntakeDialog } from "@/components/ProjectIntakeDialog";
 import { ProjectCard, type Project } from "@/components/ProjectCard";
 import { MCPConnections } from "@/components/MCPConnections";
 import { stats, recentProjects, activity } from "@/lib/mock-data";
@@ -105,6 +106,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 function Dashboard() {
+  const [intakeOpen, setIntakeOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [projectsList, setProjectsList] = useState<Project[]>(() => recentProjects.map((p,i) => ({...p,id:`project-${i}`})));
@@ -131,6 +133,7 @@ function Dashboard() {
         <SidebarNav />
       </aside>
 
+      <ProjectIntakeDialog open={intakeOpen} onOpenChange={setIntakeOpen} />
       <main className="min-w-0 flex-1">
         <div className="surface mb-5 flex items-center gap-2 rounded-xl px-2 py-2 sm:px-3">
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
@@ -176,9 +179,7 @@ function Dashboard() {
             <div className="text-xs text-muted-foreground">{today}</div>
             <h1 className="mt-1 font-display text-2xl sm:text-3xl">Welcome back, <em className="italic gradient-text">there</em></h1>
           </div>
-          <Button asChild className="btn-brand">
-            <Link to="/workspace"><Plus className="mr-1 h-4 w-4" /> New project</Link>
-          </Button>
+          <Button className="btn-brand min-h-11" onClick={() => setIntakeOpen(true)}><Plus className="mr-1 h-4 w-4" /> New project</Button>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
