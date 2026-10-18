@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Download, Share2, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ProjectSiteMap } from "@/components/ProjectSiteMap";
+import { lumenPages } from "@/lib/site-blueprint";
 import { BrandIcon } from "@/components/BrandIcon";
 import { generatedPages, generatedPalette, generatedFeatures, exportTargets } from "@/lib/mock-data";
 import { toast } from "sonner";
@@ -133,6 +135,8 @@ function Results() {
           </motion.div>
         </div>
       </section>
+
+      <ProjectSiteMap pages={lumenPages} />
 
       <section className="mt-10 grid gap-4 lg:grid-cols-3">
         <div className="surface rounded-xl p-5">

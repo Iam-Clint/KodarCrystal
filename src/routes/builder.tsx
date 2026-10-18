@@ -1,4 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
+import { SiteBlueprint } from "@/components/SiteBlueprint";
+import { appTypes, audiences, goals, effortLevels, createBlueprint, normalizeEffort, type SiteBlueprint as Blueprint } from "@/lib/site-blueprint";
+import { toast } from "sonner";
 import { AuthGate } from "@/components/AuthGate";
 import { motion, AnimatePresence } from "framer-motion";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
@@ -7,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { categories, promptSuggestions, generatedPages, generatedPalette, generatedFeatures } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/builder")({
+  validateSearch: zodValidator(z.object({ prompt: fallback(z.string(), "").default(""), style: fallback(z.string(), "").default(""), effort: fallback(z.string(), "medium").default("medium"), name: fallback(z.string(), "").default(""), visibility: fallback(z.string(), "private").default("private"), appType: fallback(z.string(), "").default(""), mode: fallback(z.string(), "build").default("build") })),
   head: () => ({
     meta: [
       { title: "Builder — Crystal.dev" },
@@ -32,60 +38,50 @@ const templates = [
   { name: "Fitness App", color: "from-emerald-300 to-teal-300" },
 ];
 
-export const effortLevels = [
-  { id: "low", label: "Low", desc: "Fast, minimal reasoning — small tweaks", cost: "~1x" },
-  { id: "medium", label: "Medium", desc: "Balanced — most tasks", cost: "~2x" },
-  { id: "high", label: "High", desc: "Deeper reasoning — complex features", cost: "~4x" },
-  { id: "max", label: "Max", desc: "Maximum reasoning — hardest problems, uses the most credits", cost: "~8x" },
-] as const;
-
 function Builder() {
-  const [prompt, setPrompt] = useState("");
+  const search = Route.useSearch();
+  const [prompt, setPrompt] = useState(search.prompt);
+  const [appType, setAppType] = useState(search.appType);
+  const [audience, setAudience] = useState("");
+  const [goal, setGoal] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const [activeCat, setActiveCat] = useState("SaaS");
   const [generating, setGenerating] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
-  const [mode, setMode] = useState<"build" | "plan">("build");
-  const [effort, setEffort] = useState<(typeof effortLevels)[number]["id"]>("medium");
+  const [mode, setMode] = useState<"build" | "plan">(search.mode === "plan" ? "plan" : "build");
+  const [effort, setEffort] = useState<(typeof effortLevels)[number]["id"]>(normalizeEffort(search.effort));
   const [hoverEffort, setHoverEffort] = useState<string | null>(null);
   const [planning, setPlanning] = useState(false);
-  const [plan, setPlan] = useState<string[] | null>(null);
+  const [plan, setPlan] = useState<Blueprint | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const shownEffort = effortLevels.find((e) => e.id === (hoverEffort ?? effort))!;
+  const shownEffort = (effortLevels.find((e) => e.id === (hoverEffort ?? effort)) ?? effortLevels[1]);
   const effortIdx = effortLevels.findIndex((e) => e.id === effort);
 
   // Prefill from a prompt typed on the landing page.
   useEffect(() => {
     try {
       const seed = typeof window !== "undefined" ? window.localStorage.getItem("crystal:prompt") : null;
-      if (seed) setPrompt(seed);
+      if (seed && !search.prompt) setPrompt(seed);
     } catch { /* ignore */ }
-  }, []);
+  }, [search.prompt]);
 
 
-  const generate = () => {
-    if (mode === "plan") {
-      setPlanning(true);
-      setPlan(null);
-      setTimeout(() => {
-        setPlanning(false);
-        const idea = prompt.trim() || "your idea";
-        setPlan([
-          `Scope: a focused first version of ${idea}.`,
-          "Pages: Landing, Auth (login / signup), Dashboard, Detail view, Settings.",
-          "Data model: users, projects, items, activity_log — with per-user ownership.",
-          "Key flows: sign up → create first project → invite a teammate → publish.",
-          "Open questions: who pays (individual or team?), do you need offline support, which regions/currencies?",
-          "Suggested next step: switch to Build mode with Medium effort and generate the Dashboard first.",
-        ]);
-      }, 1200);
-      return;
-    }
+  const runBuild = () => {
     setGenerating(true);
-    setTimeout(() => setGenerating(false), 1600);
+    setTimeout(() => { setGenerating(false); toast.success("Build complete — preview ready"); }, 1600);
   };
-
+  const generate = () => {
+    if (!prompt.trim()) return;
+    setSubmitted(true);
+    setShowSuggestions(false);
+    if (mode === "plan") {
+      setPlanning(true); setPlan(null);
+      const blueprint = createBlueprint(prompt, { appType, audience, goal, name: search.name, style: search.style, visibility: search.visibility });
+      setTimeout(() => { setPlanning(false); setPlan(blueprint); }, 1200);
+    } else runBuild();
+  };
 
   const filtered = useMemo(() => {
     const q = prompt.trim().toLowerCase();
@@ -135,7 +131,7 @@ function Builder() {
   };
 
   return (
-    <div className="mx-auto mt-8 max-w-7xl px-4 pb-16">
+    <div className="blueprint-builder mx-auto mt-8 max-w-7xl px-4 pb-16">
       <Link to="/dashboard" className="mb-3 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">← Dashboard</Link>
       <div className="mb-6">
         <div className="text-xs uppercase tracking-widest text-muted-foreground">Builder</div>
@@ -256,7 +252,14 @@ function Builder() {
                 <p className="mt-2 text-[11px] text-muted-foreground">{shownEffort.desc}</p>
               </div>
 
+              {!submitted && <section aria-label="Describe your app" className="mb-4 space-y-3 border-b border-border pb-4"><h2 className="font-sans text-sm font-medium">Describe your app</h2>{[
+                { label: "App Type", options: appTypes, value: appType, set: setAppType },
+                { label: "Audience", options: audiences, value: audience, set: setAudience },
+                { label: "Goal", options: goals, value: goal, set: setGoal },
+              ].map(group => <div key={group.label}><div className="mb-2 text-xs text-muted-foreground">{group.label}</div><div className="flex flex-wrap gap-1.5">{group.options.map(option => <Button key={option} variant="outline" aria-pressed={group.value === option} onClick={() => group.set(group.value === option ? "" : option)} className={`min-h-11 rounded-full px-3 text-xs ${group.value === option ? "border-brand bg-brand/5 ring-1 ring-brand" : ""}`}>{option}</Button>)}</div></div>)}</section>}
+              {search.style && <p className="mb-3 text-xs text-muted-foreground">{search.name || "New project"} · {search.style === "bold" ? "Bold & Editorial" : search.style === "warm" ? "Warm & Friendly" : "Clean & Minimal"} · {search.visibility}</p>}
               <textarea
+                aria-label="App prompt"
                 ref={textareaRef}
                 value={prompt}
                 onChange={(e) => { setPrompt(e.target.value); setShowSuggestions(true); setActiveIdx(0); }}
@@ -269,7 +272,7 @@ function Builder() {
                 className="h-32 w-full resize-none bg-transparent text-base outline-none placeholder:text-muted-foreground"
               />
               <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3">
-                <Button onClick={generate} disabled={generating || planning} className="btn-brand">
+                <Button onClick={generate} disabled={generating || planning || !prompt.trim()} className="btn-brand">
                   {mode === "plan" ? (
                     planning ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Thinking</> : <><NotebookPen className="mr-2 h-4 w-4" /> Discuss plan</>
                   ) : generating ? (
@@ -289,45 +292,9 @@ function Builder() {
             </div>
           </div>
 
-          <AnimatePresence>
-            {mode === "plan" && (planning || plan) && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                className="surface rounded-2xl p-5"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="flex items-center gap-2 font-display text-lg"><NotebookPen className="h-4 w-4 text-rose-500" /> Plan</h3>
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">No credits used</span>
-                </div>
-                {planning ? (
-                  <div className="mt-3 space-y-2">
-                    {[0, 1, 2, 3].map((i) => (
-                      <div key={i} className="h-3 animate-pulse rounded bg-secondary" style={{ width: `${90 - i * 12}%` }} />
-                    ))}
-                  </div>
-                ) : (
-                  <ul className="mt-3 space-y-2">
-                    {plan?.map((line) => (
-                      <li key={line} className="flex gap-2 text-sm text-muted-foreground">
-                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-rose-500" /> {line}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {!planning && (
-                  <div className="mt-4 flex gap-2">
-                    <Button size="sm" className="btn-brand" onClick={() => setMode("build")}>
-                      Switch to Build <ArrowRight className="ml-1 h-3 w-3" />
-                    </Button>
-                    <Button size="sm" variant="ghost" className="text-muted-foreground" onClick={() => setPlan(null)}>Clear</Button>
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
+          <AnimatePresence>{mode === "plan" && (planning || plan) && <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.35, ease: "easeOut" }}>
+            {planning ? <div role="status" className="surface flex items-center gap-2 rounded-lg p-5"><Loader2 className="h-4 w-4 animate-spin text-brand" />Mapping your site architecture…</div> : plan && <SiteBlueprint plan={plan} effort={effort} onApprove={() => { setMode("build"); runBuild(); }} onRefine={() => { setPlan(null); setSubmitted(false); requestAnimationFrame(() => textareaRef.current?.focus()); }} />}
+          </motion.div>}</AnimatePresence>
 
           <SuggestionList onPick={setPrompt} />
 
