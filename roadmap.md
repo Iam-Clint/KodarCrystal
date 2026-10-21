@@ -14,3 +14,7 @@
 - [x] Lazy-load Workspace, Community and MCP panel with Suspense.
 - [x] Add Settings mobile drawer/tablet rail; verify shared theme controls.
 - [x] Verify requested views and interactions in browser.
+- [ ] Upgrade recovery, verification and reset account flows with shared success animation.
+- [ ] Add workspace avatar, attachments, typing indicator and scaled device previews.
+- [ ] Upgrade landing/project entrances and audit remaining links.
+- [ ] Run rule tests and verify account/workspace flows on desktop and mobile.
