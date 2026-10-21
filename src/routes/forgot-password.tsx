@@ -1,159 +1,44 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-import { Mail, ArrowRight, Loader2, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { CrystalLogo } from "@/components/Navbar";
-import {
-  authCardClass,
-  authFieldClass,
-  authInputClass,
-  cardVariants,
-  errorTransition,
-  errorVariants,
-  itemVariants,
-  listVariants,
-} from "@/components/auth-motion";
-
-export const Route = createFileRoute("/forgot-password")({
-  head: () => ({
-    meta: [
-      { title: "Reset your password — Crystal.dev" },
-      { name: "description", content: "Request a password reset link for your Crystal account." },
-      { property: "og:title", content: "Reset your password — Crystal.dev" },
-      { property: "og:description", content: "Request a password reset link for your Crystal account." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: ForgotPasswordPage,
-});
-
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { Mail, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { CrystalLogo } from '@/components/Navbar';
+import { authCardClass, authFieldClass, authInputClass, cardVariants } from '@/components/auth-motion';
+import { useResendCooldown } from '@/hooks/use-resend-cooldown';
+import { RESET_EXPIRY_MINUTES } from '@/lib/account-flow';
+import { toast } from 'sonner';
+export const Route = createFileRoute('/forgot-password')({ head: () => ({ meta: [
+  { title: 'Forgot your password — Crystal.dev' }, { name: 'description', content: 'Request a reset link for your Crystal account.' },
+  { property: 'og:title', content: 'Forgot your password — Crystal.dev' }, { property: 'og:description', content: 'Recover access to your Crystal account with a password reset link.' },
+  { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' },
+] }), component: ForgotPasswordPage });
 function ForgotPasswordPage() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.includes("@")) return setError("Enter the email you signed up with.");
-    setError(null);
-    setLoading(true);
-    // Mock: pretend we dispatched a reset email.
-    setTimeout(() => {
-      setLoading(false);
-      setSent(true);
-    }, 900);
-  };
-
-  return (
-    <main className="relative flex min-h-[calc(100vh-3.5rem)] items-center justify-center overflow-hidden px-4 py-10 sm:px-6 sm:py-16">
-      <div className="pointer-events-none absolute inset-0 grid-bg opacity-60" />
-      {/* Modal-style presentation: the card floats in and out over the page. */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={sent ? "sent" : "form"}
-          variants={cardVariants}
-          initial="hidden"
-          animate="show"
-          exit="exit"
-          className={authCardClass}
-        >
-          <div className="flex flex-col items-center text-center">
-            <CrystalLogo className="h-8 w-8 sm:h-9 sm:w-9" />
-            <h1 className="mt-4 font-display text-2xl sm:text-3xl">
-              {sent ? "Check your inbox" : "Forgot your password?"}
-            </h1>
-            <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-              {sent
-                ? `We sent a password reset link to ${email}. Follow the instructions to set a new password.`
-                : "Enter the email associated with your account and we'll send you a reset link."}
-            </p>
-          </div>
-
-          {sent ? (
-            <div className="mt-6 space-y-4 sm:mt-7">
-              <div className="surface flex items-start gap-3 rounded-lg p-4">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
-                <div className="text-xs text-muted-foreground">
-                  The link expires in 30 minutes. If you don't see the email, check your spam folder or{" "}
-                  <button
-                    onClick={() => setSent(false)}
-                    className="font-medium text-foreground underline-offset-2 hover:underline"
-                  >
-                    try a different email
-                  </button>
-                  .
-                </div>
-              </div>
-              <Button asChild variant="outline" className="h-11 w-full sm:h-10">
-                <Link to="/login">
-                  <ArrowLeft className="mr-1 h-4 w-4" /> Back to log in
-                </Link>
-              </Button>
-            </div>
-          ) : (
-            <motion.form
-              variants={listVariants}
-              initial="hidden"
-              animate="show"
-              onSubmit={submit}
-              className="mt-6 space-y-3 sm:mt-7"
-            >
-              <motion.label variants={itemVariants} className={authFieldClass}>
-                <Mail className="h-4 w-4 shrink-0 text-muted-foreground" />
-                <input
-                  type="email"
-                  required
-                  autoFocus
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@company.com"
-                  className={authInputClass}
-                />
-              </motion.label>
-
-              <AnimatePresence initial={false}>
-                {error && (
-                  <motion.div
-                    key="err"
-                    variants={errorVariants}
-                    initial="hidden"
-                    animate="show"
-                    exit="exit"
-                    transition={errorTransition}
-                    role="alert"
-                    className="overflow-hidden"
-                  >
-                    <div className="flex items-center gap-2 rounded-lg border border-rose-400/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-600 dark:text-rose-300">
-                      <AlertCircle className="h-3.5 w-3.5 shrink-0" /> {error}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <motion.div variants={itemVariants}>
-                <Button type="submit" disabled={loading} className="btn-brand h-11 w-full text-[15px] sm:h-10 sm:text-sm">
-                  {loading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>Send reset link <ArrowRight className="ml-1 h-4 w-4" /></>
-                  )}
-                </Button>
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <Link
-                  to="/login"
-                  className="mt-1 flex items-center justify-center gap-1 py-2 text-xs text-muted-foreground hover:text-foreground"
-                >
-                  <ArrowLeft className="h-3 w-3" /> Back to log in
-                </Link>
-              </motion.div>
-            </motion.form>
-          )}
-        </motion.div>
-      </AnimatePresence>
-    </main>
-  );
+  const { seconds, restart } = useResendCooldown();
+  const reduced = useReducedMotion();
+  useEffect(() => {
+    if (!loading) return;
+    const timer = setTimeout(() => { setLoading(false); setSent(true); restart(); }, 1000);
+    return () => clearTimeout(timer);
+  }, [loading]);
+  return <main className="auth-flow relative flex min-h-[calc(100dvh-3.5rem)] items-center justify-center overflow-hidden px-4 py-10"><div className="pointer-events-none absolute inset-0 grid-bg opacity-60" />
+    <AnimatePresence mode="wait"><motion.div key={sent ? 'success' : 'form'} variants={cardVariants} initial="hidden" animate="show" exit="exit" className={authCardClass}>
+      {sent ? <div className="text-center">
+        <svg viewBox="0 0 160 120" className="mx-auto h-32 w-40 text-brand" fill="none" aria-hidden="true">
+          <motion.path d="M18 30 Q80 24 142 30 L140 101 Q80 106 20 101 Z M19 31 L80 76 L141 31 M21 100 L59 62 M139 100 L101 62" pathLength="100" strokeDasharray="100" initial={{ strokeDashoffset: reduced ? 0 : 100 }} animate={{ strokeDashoffset: 0 }} transition={{ duration: 0.8, ease: 'easeInOut' }} stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          <motion.path d="M66 12 L71 17 M89 9 L88 17 M109 16 L103 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} />
+        </svg>
+        <h1 className="mt-4 text-3xl">Check your email</h1><p className="mt-3 break-words text-sm leading-relaxed text-muted-foreground">We sent a reset link to <strong className="text-foreground">{email}</strong>. It expires in {RESET_EXPIRY_MINUTES} minutes.</p>
+        <Button variant="ghost" disabled={seconds > 0} className="mt-5 min-h-11 text-brand" onClick={() => { restart(); toast.success('Reset link resent'); }}>{seconds > 0 ? `Resend in ${seconds}s` : 'Resend link'}</Button>
+        <Link to="/login" className="mt-3 flex min-h-11 items-center justify-center text-sm text-muted-foreground hover:text-foreground">Back to login</Link>
+      </div> : <>
+        <CrystalLogo className="mx-auto h-9 w-9" /><h1 className="mt-4 text-center text-3xl">Forgot your password?</h1><p className="mt-2 text-center text-sm text-muted-foreground">Enter your email and we'll send a reset link.</p>
+        <form className="mt-6 space-y-3" onSubmit={event => { event.preventDefault(); setLoading(true); }}><label className={authFieldClass}><Mail className="h-4 w-4 shrink-0 text-muted-foreground" /><input aria-label="Email address" type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="you@company.com" className={authInputClass} /></label><Button type="submit" disabled={loading} className="btn-brand min-h-11 w-full">{loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Send reset link'}</Button></form>
+        <Link to="/login" className="mt-4 flex min-h-11 items-center justify-center text-sm text-muted-foreground hover:text-foreground">Back to login</Link>
+      </>}
+    </motion.div></AnimatePresence>
+  </main>;
 }
