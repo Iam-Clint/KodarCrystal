@@ -30,6 +30,19 @@ export const errorVariants: Variants = {
 
 export const errorTransition: Transition = { duration: 0.22, ease: "easeOut" };
 
+export const shakeVariants: Variants = {
+  shake: { x: [0, -6, 6, -4, 4, -2, 2, 0], transition: { duration: 0.35, ease: "easeInOut" } },
+};
+export const successCircleVariants: Variants = {
+  hidden: { scale: 0 },
+  show: { scale: 1, transition: { type: "spring", stiffness: 240, damping: 16 } },
+};
+export const checkVariants: Variants = {
+  hidden: { strokeDashoffset: 100 },
+  show: { strokeDashoffset: 0, transition: { duration: 0.15, delay: 0.3, ease: "easeOut" } },
+};
+export const digitSpring: Transition = { type: "spring", stiffness: 600, damping: 20 };
+
 /** Shared responsive shell classes for the auth card. */
 export const authCardClass =
   "surface relative w-full max-w-[420px] rounded-2xl p-5 sm:max-w-md sm:rounded-3xl sm:p-8 md:max-w-lg md:p-10 lg:max-w-md lg:p-8";
