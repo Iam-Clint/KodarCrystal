@@ -272,6 +272,21 @@
 .style-clean { --style-bg: oklch(1 0 0); --style-fg: oklch(0.2 0 0); --style-line: oklch(0.91 0 0); --style-accent: oklch(0.35 0 0); }
 .style-bold { --style-bg: var(--editor); --style-fg: var(--editor-foreground); --style-line: var(--editor-active); --style-accent: var(--brand); }
 .style-warm { --style-bg: oklch(0.96 0.025 75); --style-fg: oklch(0.3 0.02 30); --style-line: oklch(0.89 0.04 75); --style-accent: var(--brand-2); }
-@theme inline { --color-live: var(--live); }
-:root { --live: oklch(0.64 0.17 150); }
+@theme inline {
+  --color-live: var(--live);
+  --color-success-foreground: var(--success-foreground);
+}
+:root { --live: oklch(0.58 0.17 150); --success-foreground: oklch(1 0 0); }
 .intake-dialog h2, .blueprint-builder h1, .blueprint-builder h2, .blueprint-builder h3 { letter-spacing: 0; }
+
+.workspace-avatar { background: var(--gradient-brand); color: var(--success-foreground); }
+.preview-canvas { container-type: inline-size; }
+.preview-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
+@container (max-width: 500px) { .preview-columns { grid-template-columns: minmax(0, 1fr); } }
+.preview-coffee-background { background: var(--gradient-soft); }
+.preview-bean-art { background: var(--gradient-brand); }
+.typing-dot { animation: typing-bounce 1s ease-in-out infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes typing-bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+.auth-flow h1 { letter-spacing: 0; }

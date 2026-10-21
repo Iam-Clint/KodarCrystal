@@ -511,7 +511,7 @@ function Settings() {
                     <div className="mt-1 font-display text-2xl gradient-text">Pro</div>
                     <div className="mt-1 text-sm text-muted-foreground">$24/month — renews May 17</div>
                   </div>
-                  <Button variant="outline" size="sm">Manage</Button>
+                  <Button asChild variant="outline" size="sm"><Link to="/pricing">Manage</Link></Button>
                 </div>
               </div>
               <div className="surface rounded-xl p-5">

@@ -5,7 +5,6 @@ import { Mail, Lock, User, ArrowRight, Loader2, Check, AlertCircle } from "lucid
 import { Button } from "@/components/ui/button";
 import { CrystalLogo } from "@/components/Navbar";
 import { OAuthButtons } from "@/components/OAuthButtons";
-import { signIn } from "@/lib/auth";
 import {
   authCardClass,
   authFieldClass,
@@ -49,8 +48,7 @@ function SignupPage() {
     setError(null);
     setLoading(true);
     setTimeout(() => {
-      signIn();
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/verify" });
     }, 900);
   };
 

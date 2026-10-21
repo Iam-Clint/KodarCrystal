@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -67,6 +67,7 @@ const community = [
 ];
 
 function Landing() {
+  const reduced = useReducedMotion();
   const [prompt, setPrompt] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const navigate = useNavigate();
@@ -106,7 +107,7 @@ function Landing() {
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: "easeOut", delay: 0.05 }}
             className="mt-6 font-display text-5xl font-normal leading-[1.05] tracking-tight md:text-7xl"
           >
-            Build something <em className="italic gradient-text">beautiful</em>
+            {['Build', 'something', 'beautiful'].map((word, i) => <motion.span key={word} className={`inline-block ${i === 2 ? 'italic gradient-text' : ''}`} initial={reduced ? false : { y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4, delay: i * 0.06, ease: 'easeOut' }}>{word}{i < 2 ? '\u00a0' : ''}</motion.span>)}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: "easeOut", delay: 0.1 }}
@@ -117,7 +118,7 @@ function Landing() {
 
           {/* Prompt composer */}
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.45, ease: "easeOut", delay: 0.15 }}
+            initial={reduced ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: "easeOut", delay: 0.55 }}
             className="mx-auto mt-10 w-full max-w-2xl"
           >
             {/* Interactive suggestions — sit right above the prompt box */}
@@ -313,18 +314,19 @@ const CommunityGrid = memo(function CommunityGrid() {
 });
 
 const TemplateChips = memo(function TemplateChips({ onSelect }: { onSelect: (label: string) => void }) {
+  const reduced = useReducedMotion();
   return (
     <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-      {templates.map((t) => {
+      {templates.map((t, i) => {
         const Icon = t.icon;
         return (
-          <button
+          <motion.div key={t.label} initial={reduced ? false : { scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.85 + i * 0.06, duration: 0.3 }}><Button variant="ghost"
             key={t.label}
             onClick={() => onSelect(t.label)}
             className="surface group flex items-center gap-1.5 min-h-11 rounded-full px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
           >
             <Icon className="h-3.5 w-3.5" /> {t.label}
-          </button>
+          </Button></motion.div>
         );
       })}
     </div>

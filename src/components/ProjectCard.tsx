@@ -11,7 +11,7 @@ export const ProjectCard = memo(function ProjectCard({ p, i, onUpdate, onDuplica
   const [name,setName] = useState(p.name);
   const [deleting,setDeleting] = useState(false);
   const save = () => {if (!name.trim()) return; onUpdate(p.id,{name:name.trim()});setEditing(false);};
-  return <motion.article initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.35,ease:'easeOut',delay:Math.min(i,10)*0.05}} className="surface group relative overflow-hidden rounded-lg">
+  return <motion.article initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:0.35,ease:'easeOut',delay:i*0.06}} className="surface group relative overflow-hidden rounded-lg">
     <DropdownMenu><DropdownMenuTrigger asChild><Button size="icon" variant="secondary" aria-label={`Options for ${p.name}`} className="project-menu-trigger absolute right-2 top-2 z-10 h-11 w-11 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100"><MoreVertical className="h-4 w-4" /></Button></DropdownMenuTrigger><DropdownMenuContent align="end" className="w-56">
       <DropdownMenuItem asChild className="min-h-11"><Link to="/workspace"><ExternalLink />Open in workspace</Link></DropdownMenuItem>
       <DropdownMenuItem className="min-h-11" onSelect={() => {setName(p.name);setEditing(true);}}><Pencil />Rename</DropdownMenuItem>

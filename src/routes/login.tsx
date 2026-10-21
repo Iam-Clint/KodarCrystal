@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { CrystalLogo } from "@/components/Navbar";
 import { OAuthButtons } from "@/components/OAuthButtons";
 import { signIn } from "@/lib/auth";
+import { fallback, zodValidator } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import {
   authCardClass,
   authFieldClass,
@@ -18,6 +20,7 @@ import {
 } from "@/components/auth-motion";
 
 export const Route = createFileRoute("/login")({
+  validateSearch: zodValidator(z.object({ reset: fallback(z.number(), 0).default(0) })),
   head: () => ({
     meta: [
       { title: "Log in — Crystal.dev" },
@@ -33,6 +36,7 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { reset } = Route.useSearch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,6 +58,7 @@ function LoginPage() {
     <main className="relative flex min-h-[calc(100vh-3.5rem)] items-center justify-center overflow-hidden px-4 py-10 sm:px-6 sm:py-16">
       <div className="pointer-events-none absolute inset-0 grid-bg opacity-60" />
       <motion.div variants={cardVariants} initial="hidden" animate="show" className={authCardClass}>
+        {reset === 1 && <motion.div role="status" initial={{ y: -8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="mb-5 rounded-lg border border-live/30 bg-live/10 p-3 text-sm text-live">Your password has been updated. Log in below.</motion.div>}
         <div className="flex flex-col items-center text-center">
           <CrystalLogo className="h-8 w-8 sm:h-9 sm:w-9" />
           <h1 className="mt-4 font-display text-2xl sm:text-3xl">Welcome back</h1>
