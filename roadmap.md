@@ -1,0 +1,20 @@
+# Roadmap
+- [x] Add structured site blueprints, effort estimates and smart builder intake.
+- [x] Add dashboard three-step project intake with typed URL handoff.
+- [x] Add workspace page navigation and Results site map.
+- [x] Add community submission dialog.
+- [x] Test planning rules and verify all six requested flows on desktop/mobile.
+- [x] Complete requested Settings sections and connector layout.
+- [x] Expand dashboard project menus with local-state actions.
+- [x] Add workspace Chat, Code, Preview, Versions and sharing.
+- [x] Add subtle entrances and custom 404.
+- [x] Verify flows, mobile layouts and MCP drawer; preserve auth pages/Navbar.
+- [x] Check Results, MCP and Settings brand icons.
+- [x] Add explicit community mount gate and memoized feed cards.
+- [x] Lazy-load Workspace, Community and MCP panel with Suspense.
+- [x] Add Settings mobile drawer/tablet rail; verify shared theme controls.
+- [x] Verify requested views and interactions in browser.
+- [ ] Upgrade recovery, verification and reset account flows with shared success animation.
+- [ ] Add workspace avatar, attachments, typing indicator and scaled device previews.
+- [ ] Upgrade landing/project entrances and audit remaining links.
+- [ ] Run rule tests and verify account/workspace flows on desktop and mobile.
